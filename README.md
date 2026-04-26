@@ -1,1 +1,0 @@
-# small-side-project
