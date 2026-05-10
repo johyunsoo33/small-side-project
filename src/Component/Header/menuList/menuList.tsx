@@ -48,7 +48,7 @@ export default function MenuList() {
       </div>
 
       {isOpen ? (
-        <ul className="flex justify-between">
+        <ul className="flex justify-between mt-4">
           {/* 왼쪽 메인 기능 */}
           <div className="flex">
             <MenuItem content="일정" targetLink="mySchedule" />
@@ -59,8 +59,11 @@ export default function MenuList() {
           {/* 오른쪽 유틸리티 */}
           <div className="flex">
             <MenuItem content="최근 문서" targetLink="recent" />
-            <MenuItem content="즐겨찾기" targetLink="favorites" />
-            <MenuItem content="휴지통" targetLink="trash" />
+            <MenuItem
+              imagePath="/Icons/bookmarkIcon.svg"
+              targetLink="bookmark"
+            />
+            <MenuItem imagePath="/Icons/trashIcon.svg" targetLink="trash" />
           </div>
         </ul>
       ) : (
