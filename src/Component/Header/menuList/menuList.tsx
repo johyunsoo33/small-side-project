@@ -53,7 +53,7 @@ export default function MenuList() {
           <div className="flex">
             <MenuItem content="일정" targetLink="mySchedule" />
             <MenuItem content="메모" targetLink="myMemo" />
-            <MenuItem content="할 일" targetLink="myTasks" />
+            <MenuItem content="할 일" targetLink="myTask" />
           </div>
 
           {/* 오른쪽 유틸리티 */}
