@@ -11,16 +11,17 @@ export default function TaskBox() {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const prevLastDay = new Date(year, month, 0);
+  const firstDay = new Date(year, month, 1); // 해당 달의 첫 번째 날짜 객체 생성
+  const lastDay = new Date(year, month + 1, 0); // 해당 달의 마지막 날짜 객체 생성 (다음 달의 0번째 날짜는 현재 달의 마지막 날짜)
+  const prevLastDay = new Date(year, month, 0); // 이전 달의 마지막 날짜 객체 생성 (현재 달의 0번째 날짜는 이전 달의 마지막 날짜)
 
-  const startDayOfWeek = firstDay.getDay();
-  const totalDays = lastDay.getDate();
-  const prevMonthTotalDays = prevLastDay.getDate();
+  const startDayOfWeek = firstDay.getDay(); // 해당 달의 첫 번째 날짜가 무슨 요일인지
+  const totalDays = lastDay.getDate(); // 이달 총 일수
+  const prevMonthTotalDays = prevLastDay.getDate(); // 전달 총 일수
 
   const calendar: CalendarDate[] = [];
 
+  // 이전 달 날짜
   for (let i = startDayOfWeek - 1; i >= 0; i--) {
     calendar.push({
       day: prevMonthTotalDays - i,
@@ -58,7 +59,7 @@ export default function TaskBox() {
 
   return (
     <>
-      <div>
+      <div className="p-4">
         <TaskTopBox
           prevMonth={prevMonth}
           nextMonth={nextMonth}

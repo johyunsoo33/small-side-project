@@ -1,3 +1,11 @@
+import Header from "@/src/Component/Header/header";
+import TaskBox from "@/src/Component/TaskBox/taskBox";
+
 export default async function MySchedule() {
-  return null;
+  return (
+    <>
+      <Header />
+      <TaskBox />
+    </>
+  );
 }

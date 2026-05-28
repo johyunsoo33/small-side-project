@@ -11,7 +11,7 @@ interface TaskCalenderBoxProps {
 export default function TaskCalenderBox({ calendar }: TaskCalenderBoxProps) {
   return (
     <div className="taskCalenderBox max-w-11/12 mt-10 m-auto">
-      <div className="taskCalender grid grid-cols-7 gap-2">
+      <div className="taskCalender grid grid-cols-7 gap-4">
         {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
           <div key={day} className="font-bold text-white text-center">
             {day}
@@ -21,7 +21,7 @@ export default function TaskCalenderBox({ calendar }: TaskCalenderBoxProps) {
         {calendar.map((date, index) => (
           <div
             key={index}
-            className={`pb-4 pl-1 pt-1 ${
+            className={`min-w-28 min-h-28 pb-4 pl-1 pt-1 ${
               date.isCurrentMonth ? "text-white" : "text-gray-400"
             } border-1 border-white rounded-xl`}
           >
