@@ -20,6 +20,11 @@ export default function TaskTopBox({
   const handleDeleteTask = () => {
     // 할 일 삭제 로직 구현
   };
+  const taskAddContentArea = (
+    event: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    event.target.style.height = event.target.scrollHeight + "px";
+  };
 
   return (
     <>
@@ -72,7 +77,12 @@ export default function TaskTopBox({
         <main>
           <form action="" className="flex flex-col gap-2">
             <input type="text" placeholder="할 일 제목" />
-            <input type="text" placeholder="할 일 내용" />
+            <textarea
+              name="description"
+              id=""
+              placeholder="할 일 설명"
+              onChange={taskAddContentArea}
+            ></textarea>
             <div>
               <input type="date" placeholder="할 일 시작일" />
               <input type="date" placeholder="할 일 마감일" />

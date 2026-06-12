@@ -37,3 +37,8 @@ body {
     background 0.2s ease,
     color 0.2s ease;
 }
+
+.taskAddPopUpBox textarea {
+  resize: none;
+  height: 5rem;
+}
