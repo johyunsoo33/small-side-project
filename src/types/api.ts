@@ -12,7 +12,7 @@ export type ServerValidationErrors<E> = Partial<
 
 // API 서버의 응답
 export type ApiRes<T, E = never> =
-  | { ok: 1; item: T }
+  | { ok: 1; message: string; item: T }
   | { ok: 0; message: string; errors?: ServerValidationErrors<E> };
 
 // 서버 함수에서 반환할 타입(Promise를 반환해야 함)
