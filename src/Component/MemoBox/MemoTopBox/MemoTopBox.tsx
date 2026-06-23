@@ -2,8 +2,8 @@ import Image from "next/image";
 
 export default function MemoTopBox() {
   return (
-    <div className="taskTopBox flex justify-between max-w-11/12 mt-4 m-auto">
-      <div className="taskAdd">
+    <div className="taskTopBox relative max-w-11/12 mt-10 ">
+      <div className="taskAdd absolute right-4">
         <button className="mr-2" title="할 일 추가">
           <Image
             src="/Icons/calender_add.svg"
