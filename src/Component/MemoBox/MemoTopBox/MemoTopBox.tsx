@@ -1,6 +1,8 @@
 import Image from "next/image";
 
 export default function MemoTopBox() {
+  const createMemo = () => {};
+
   return (
     <div className="taskTopBox relative max-w-11/12 mt-10 ">
       <div className="taskAdd absolute right-4">
@@ -8,14 +10,6 @@ export default function MemoTopBox() {
           <Image
             src="/Icons/calender_add.svg"
             alt="달력에서 할 일 추가"
-            width={22}
-            height={22}
-          />
-        </button>
-        <button title="할 일 삭제">
-          <Image
-            src="/Icons/calender_delete.svg"
-            alt="달력에서 할 일 삭제"
             width={22}
             height={22}
           />

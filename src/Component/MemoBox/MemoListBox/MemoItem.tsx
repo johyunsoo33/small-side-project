@@ -14,6 +14,9 @@ export default function MemoItem({
   startAt,
   deadLineAt,
 }: MemoItemProps) {
+  const deleteMemo = () => {};
+  const modifyMemo = () => {};
+
   return (
     <li className="list-none bg-gray-300/20 rounded-lg w-full min-h-16 flex justify-between items-center p-3">
       <figure
@@ -40,7 +43,7 @@ export default function MemoItem({
           {title}
         </figcaption>
         <div
-          className={`row-start-2 flex gap-2 text-xs text-white/40 ${
+          className={`row-start-2 flex gap-2 text-xs text-white/55 ${
             imgSrc ? "col-start-2" : "col-start-1"
           }`}
         >
@@ -48,15 +51,27 @@ export default function MemoItem({
           <span>~</span>
           <time>{deadLineAt}</time>
         </div>
-        <p
+        <div
           className={`row-start-3 text-sm text-white/70 truncate ${
             imgSrc ? "col-start-2" : "col-start-1"
           }`}
-        >
-          {content}
-        </p>
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
       </figure>
-      <div></div>
+      <div className=" flex flex-col gap-4 ml-4">
+        <button
+          type="button"
+          className="btn-3d-red font-basic xl:p-2 xl:pl-5 xl:pr-5 lg:p-2 lg:pl-4 lg:pr-4 md:p-1.5 md:pl-3 md:pr-3 sm:p-1.5 sm:pl-2 sm:pr-2 p-1 pl-1.5 pr-1.5 rounded-md xl:text-size-sm lg:text-sm md:text-xs sm:text-xs text-[10px] whitespace-nowrap"
+        >
+          삭제
+        </button>
+        <button
+          type="button"
+          className="btn-3d font-basic xl:p-2 xl:pl-5 xl:pr-5 lg:p-2 lg:pl-4 lg:pr-4 md:p-1.5 md:pl-3 md:pr-3 sm:p-1.5 sm:pl-2 sm:pr-2 p-1 pl-1.5 pr-1.5 rounded-md xl:text-size-sm lg:text-sm md:text-xs sm:text-xs text-[10px] whitespace-nowrap"
+        >
+          수정
+        </button>
+      </div>
     </li>
   );
 }

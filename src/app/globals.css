@@ -13,6 +13,9 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-border: var(--border);
+  --color-button-color: #25442c;
+  --color-flame-400: #c6531f;
+  --color-flame-500: #a04014;
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -41,4 +44,45 @@ body {
 .taskAddPopUpBox textarea {
   resize: none;
   height: 5rem;
+}
+
+@layer components {
+  .btn-3d {
+    background-color: var(--color-button-color);
+    color: white;
+    box-shadow:
+      0 0 0 1px var(--color-button-color) inset,
+      0 0 0 2px rgba(255, 238, 188, 0.15) inset,
+      0 6px 0 1px rgba(0, 0, 0, 0.4),
+      0 6px 8px 1px rgba(0, 0, 0, 0.5);
+    @apply transition-all duration-100 ease-in-out cursor-pointer border-0 outline-none font-semibold;
+  }
+
+  .btn-3d:active {
+    box-shadow:
+      0 0 0 1px var(--color-button-color) inset,
+      0 0 0 2px rgba(255, 268, 198, 0.116) inset,
+      0 0 0 1px rgba(0, 0, 0, 0.4);
+    transform: translateY(6px);
+  }
+
+  .btn-3d-red {
+    background-color: var(--color-flame-400); /* #ff9466 */
+    color: var(--color-button-color);
+    border: 1px solid var(--color-flame-500); /* #a04014 */
+    box-shadow:
+      0 0 0 1px var(--color-flame-500) inset,
+      0 6px 0 0 rgba(126, 38, 0, 0.7),
+      /* flame-200 with 0.7 opacity */ 0 6px 0 1px rgba(0, 0, 0, 0.2),
+      0 6px 8px 1px rgba(0, 0, 0, 0.5);
+    @apply transition-all duration-100 ease-in-out cursor-pointer border-0 outline-none font-semibold;
+  }
+
+  .btn-3d-red:active {
+    box-shadow:
+      0 0 0 1px var(--color-flame-400) inset,
+      0 6px 0 0 rgba(198, 83, 31, 0.7) inset,
+      /* flame-200 with 0.7 opacity */ 0 0 0 1px rgba(0, 0, 0, 0.4);
+    transform: translateY(6px);
+  }
 }
