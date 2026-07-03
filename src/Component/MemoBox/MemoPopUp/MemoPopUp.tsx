@@ -1,0 +1,161 @@
+"use client";
+
+import type { ChangeEvent, MouseEvent } from "react";
+import { X, Pin } from "lucide-react";
+
+interface MemoPopUpProps {
+  closePopUpFunction: () => void;
+  popUpStatus: boolean;
+}
+
+export default function MemoPopUp({
+  closePopUpFunction,
+  popUpStatus,
+}: MemoPopUpProps) {
+  const MemoAddContentArea = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    event.target.style.height = "auto";
+    event.target.style.height = event.target.scrollHeight + "px";
+  };
+
+  const stopPopUpClick = (event: MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
+  return popUpStatus ? (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      onClick={closePopUpFunction}
+    >
+      <div
+        className="taskAddPopUpBox memo-card group relative w-11/12 max-w-lg -rotate-1 transition-transform duration-300 hover:rotate-0"
+        onClick={stopPopUpClick}
+      >
+        {/* 워시테이프 */}
+        <div className="absolute -top-3 left-9 z-10 h-6 w-20 -rotate-3 border border-[#E8604C]/10 bg-[#FFD966]/85 shadow-sm" />
+
+        <div className="relative flex flex-col justify-between rounded-sm border border-[#2B2620]/10 bg-[#FDF6E9] p-6 shadow-[6px_6px_0_0_rgba(43,38,32,0.15)]">
+          {/* 닫기 버튼 (아이콘) */}
+          <button
+            type="button"
+            aria-label="닫기"
+            onClick={closePopUpFunction}
+            className="absolute right-3 top-3 rounded-full p-1.5 text-[#2B2620]/40 transition-all duration-150 hover:rotate-90 hover:bg-[#2B2620]/5 hover:text-[#E8604C] active:scale-90"
+          >
+            <X size={18} />
+          </button>
+
+          <header className="mb-5 flex items-center gap-2">
+            <Pin size={16} className="-rotate-45 text-[#E8604C]" />
+            <p className="text-lg font-bold tracking-tight text-[#2B2620]">
+              메모 추가
+            </p>
+          </header>
+
+          <main>
+            <form action="" className="flex flex-col gap-5">
+              {/* 제목 - 플로팅 라벨 */}
+              <div className="relative">
+                <input
+                  id="memo-title"
+                  type="text"
+                  placeholder=" "
+                  className="peer w-full border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
+                />
+                <label
+                  htmlFor="memo-title"
+                  className="pointer-events-none absolute left-1 top-5 text-sm text-[#2B2620]/40 transition-all duration-200 ease-out peer-focus:top-0 peer-focus:text-xs peer-focus:font-medium peer-focus:text-[#E8604C] peer-[&:not(:placeholder-shown)]:top-0 peer-[&:not(:placeholder-shown)]:text-xs"
+                >
+                  메모 제목
+                </label>
+              </div>
+
+              {/* 설명 - 플로팅 라벨, 높이는 기존 로직 그대로 사용 */}
+              <div className="relative">
+                <textarea
+                  id="memo-desc"
+                  name="description"
+                  placeholder=" "
+                  rows={2}
+                  onChange={MemoAddContentArea}
+                  className="peer w-full resize-none overflow-hidden border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
+                />
+                <label
+                  htmlFor="memo-desc"
+                  className="pointer-events-none absolute left-1 top-5 text-sm text-[#2B2620]/40 transition-all duration-200 ease-out peer-focus:top-0 peer-focus:text-xs peer-focus:font-medium peer-focus:text-[#E8604C] peer-[&:not(:placeholder-shown)]:top-0 peer-[&:not(:placeholder-shown)]:text-xs"
+                >
+                  메모 설명
+                </label>
+              </div>
+
+              {/* 날짜 두 개 */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative">
+                  <input
+                    id="start-date"
+                    type="date"
+                    className="w-full border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-sm text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
+                  />
+                  <label
+                    htmlFor="start-date"
+                    className="pointer-events-none absolute left-1 top-0 text-xs font-medium text-[#2B2620]/50"
+                  >
+                    시작일
+                  </label>
+                </div>
+                <div className="relative">
+                  <input
+                    id="end-date"
+                    type="date"
+                    className="w-full border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-sm text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
+                  />
+                  <label
+                    htmlFor="end-date"
+                    className="pointer-events-none absolute left-1 top-0 text-xs font-medium text-[#2B2620]/50"
+                  >
+                    마감일
+                  </label>
+                </div>
+              </div>
+            </form>
+          </main>
+
+          <footer className="mt-6 flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={closePopUpFunction}
+              className="rounded-sm border border-[#2B2620]/15 px-4 py-2 text-sm text-[#2B2620]/60 transition-all duration-150 hover:bg-[#2B2620]/5 active:scale-95"
+            >
+              닫기
+            </button>
+            <button
+              type="button"
+              className="rounded-sm bg-[#E8604C] px-5 py-2 text-sm font-medium text-[#FDF6E9] shadow-[3px_3px_0_0_#2B2620] transition-all duration-100 hover:brightness-105 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
+            >
+              추가하기
+            </button>
+          </footer>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes popIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.9) rotate(-4deg) translateY(12px);
+          }
+          70% {
+            opacity: 1;
+            transform: scale(1.02) rotate(-1deg) translateY(-2px);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) rotate(-1deg) translateY(0);
+          }
+        }
+        .memo-card {
+          animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+      `}</style>
+    </div>
+  ) : null;
+}
