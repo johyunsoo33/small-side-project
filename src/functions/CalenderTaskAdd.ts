@@ -5,8 +5,8 @@ import { ApiResPromise } from "../types/api";
 export async function calenderAddTask(
   title: string,
   content: string,
-  startTime: string,
-  endTime: string,
+  startDate: string,
+  endDate: string,
 ): ApiResPromise<addTaskProps> {
   let res: Response;
   try {

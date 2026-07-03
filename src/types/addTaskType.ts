@@ -1,6 +1,6 @@
 export interface addTaskProps {
   title: string;
   content: string;
-  startTime: string;
-  endTime:string;
+  startDate: string;
+  endDate: string;
 }
