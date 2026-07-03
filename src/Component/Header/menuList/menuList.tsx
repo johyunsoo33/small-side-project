@@ -49,16 +49,14 @@ export default function MenuList() {
           <div className="flex">
             <MenuItem content="일정" targetLink="mySchedule" />
             <MenuItem content="메모" targetLink="myMemo" />
-            <MenuItem content="할 일" targetLink="myTask" />
           </div>
 
           <div className="flex">
             <MenuItem content="최근 문서" targetLink="recent" />
             <MenuItem
               imagePath="/Icons/bookmarkIcon.svg"
-              targetLink="bookmark"
+              targetLink="importantSchedule"
             />
-            <MenuItem imagePath="/Icons/trashIcon.svg" targetLink="trash" />
           </div>
         </ul>
       ) : null}
