@@ -4,9 +4,11 @@ import TaskTopBox from "./taskTopBox/taskTopBox";
 import TaskCalenderBox, {
   type CalendarDate,
 } from "./taskCalenderBox/taskCalenderBox";
+import TaskPopUpBox from "./taskPopUpBox/taskPopUpBox";
 
 export default function TaskBox() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -57,6 +59,12 @@ export default function TaskBox() {
     setCurrentDate(new Date(year, month + 1, 1));
   };
 
+  const closePopUp = () => {
+    setOpen(false);
+  };
+  const createTask = () => {
+    setOpen(true);
+  };
   return (
     <>
       <div className="p-4">
@@ -65,8 +73,12 @@ export default function TaskBox() {
           nextMonth={nextMonth}
           year={year}
           month={month}
+          createTask={createTask}
         />
         <TaskCalenderBox calendar={calendar} />
+        <div className="taskAddPopUpBox">
+          <TaskPopUpBox closePopUpFunction={closePopUp} popUpStatus={open} />
+        </div>
       </div>
     </>
   );

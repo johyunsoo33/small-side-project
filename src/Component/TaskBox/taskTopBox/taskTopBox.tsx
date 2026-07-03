@@ -2,6 +2,7 @@ import { calenderAddTask } from "@/src/functions/CalenderTaskAdd";
 import Image from "next/image";
 
 interface TaskTopBoxProps {
+  createTask: () => void;
   prevMonth: () => void;
   nextMonth: () => void;
   year: number;
@@ -9,21 +10,14 @@ interface TaskTopBoxProps {
 }
 
 export default function TaskTopBox({
+  createTask,
   prevMonth,
   nextMonth,
   year,
   month,
 }: TaskTopBoxProps) {
-  const handleAddTask = () => {
-    // 할 일 추가 로직 구현
-  };
   const handleDeleteTask = () => {
     // 할 일 삭제 로직 구현
-  };
-  const taskAddContentArea = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    event.target.style.height = event.target.scrollHeight + "px";
   };
 
   return (
@@ -51,7 +45,7 @@ export default function TaskTopBox({
           {year}년 {month + 1}월
         </span>
         <div className="taskAdd">
-          <button className="mr-2" title="할 일 추가">
+          <button className="mr-2" onClick={createTask} title="할 일 추가">
             <Image
               src="/Icons/calender_add.svg"
               alt="달력에서 할 일 추가"
@@ -68,28 +62,6 @@ export default function TaskTopBox({
             />
           </button>
         </div>
-      </div>
-      {/* 할 일 추가 팝업 창 */}
-      <div className="taskAddPopUpBox flex flex-col justify-between max-w-11/12 mt-4 m-auto border-1 border-red-400">
-        <header>
-          <p>할 일 추가</p>
-        </header>
-        <main>
-          <form action="" className="flex flex-col gap-2">
-            <input type="text" placeholder="할 일 제목" />
-            <textarea
-              name="description"
-              id=""
-              placeholder="할 일 설명"
-              onChange={taskAddContentArea}
-            ></textarea>
-            <div>
-              <input type="date" placeholder="할 일 시작일" />
-              <input type="date" placeholder="할 일 마감일" />
-            </div>
-          </form>
-        </main>
-        <footer></footer>
       </div>
     </>
   );
