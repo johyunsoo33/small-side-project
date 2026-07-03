@@ -6,7 +6,6 @@ import { X, CalendarPlus } from "lucide-react";
 interface TaskPopUpProps {
   closePopUpFunction: () => void;
   popUpStatus: boolean;
-  /** 캘린더에서 클릭한 날짜. 없으면 오늘 날짜로 표시 */
   selectedDate?: Date;
 }
 
@@ -45,7 +44,7 @@ export default function TaskPopUpBox({
         onClick={stopPopUpClick}
       >
         {/* 왼쪽 날짜 스텁 */}
-        <div className="relative flex w-24 shrink-0 flex-col items-center justify-center gap-1 bg-gradient-to-b from-[#4F5DFF] to-[#3A46D6] py-6 text-white">
+        <div className="relative flex w-24 shrink-0 flex-col items-center justify-center gap-1 bg-linear-to-b from-[#4F5DFF] to-[#3A46D6] py-6 text-white">
           <span className="text-xs font-medium tracking-wider text-white/70">
             {month}
           </span>

@@ -5,6 +5,7 @@ interface TaskTopBoxProps {
   createTask: () => void;
   prevMonth: () => void;
   nextMonth: () => void;
+  deleteTask: () => void;
   year: number;
   month: number;
 }
@@ -13,13 +14,10 @@ export default function TaskTopBox({
   createTask,
   prevMonth,
   nextMonth,
+  deleteTask,
   year,
   month,
 }: TaskTopBoxProps) {
-  const handleDeleteTask = () => {
-    // 할 일 삭제 로직 구현
-  };
-
   return (
     <>
       <div className="taskTopBox flex justify-between max-w-11/12 mt-4 m-auto">
@@ -53,7 +51,7 @@ export default function TaskTopBox({
               height={22}
             />
           </button>
-          <button title="할 일 삭제">
+          <button onClick={deleteTask} title="할 일 삭제">
             <Image
               src="/Icons/calender_delete.svg"
               alt="달력에서 할 일 삭제"
