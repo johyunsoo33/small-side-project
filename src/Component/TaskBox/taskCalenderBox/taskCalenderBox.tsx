@@ -8,7 +8,10 @@ interface TaskCalenderBoxProps {
   calendar: CalendarDate[];
 }
 
-export default function TaskCalenderBox({ calendar }: TaskCalenderBoxProps) {
+export default function TaskCalenderBox({
+  calendar,
+  taskList,
+}: TaskCalenderBoxProps & { taskList: TaskProps[] }) {
   return (
     <div className="taskCalenderBox max-w-11/12 mt-10 m-auto">
       <div className="taskCalender grid grid-cols-7 gap-4">

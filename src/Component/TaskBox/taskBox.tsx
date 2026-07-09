@@ -1,13 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskTopBox from "./taskTopBox/taskTopBox";
 import TaskCalenderBox, {
   type CalendarDate,
 } from "./taskCalenderBox/taskCalenderBox";
 import TaskPopUpBox from "./taskPopUpBox/taskPopUpBox";
 import TaskPopUpDeleteBox from "./taskPopUpBox/taskPopUpDeleteBox";
+import { TaskProps } from "@/src/types/addTaskType";
 
-export default function TaskBox() {
+export default function TaskBox({ taskList }: { taskList: TaskProps[] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -27,8 +28,10 @@ export default function TaskBox() {
 
   // 이전 달 날짜
   for (let i = startDayOfWeek - 1; i >= 0; i--) {
+    const day = prevMonthTotalDays - i;
     calendar.push({
-      day: prevMonthTotalDays - i,
+      day,
+      date: new Date(year, month - 1, day),
       isCurrentMonth: false,
       isPrevMonth: true,
     });
@@ -37,7 +40,8 @@ export default function TaskBox() {
   // 현재 달 날짜
   for (let day = 1; day <= totalDays; day++) {
     calendar.push({
-      day: day,
+      day,
+      date: new Date(year, month, day),
       isCurrentMonth: true,
       isPrevMonth: false,
     });
@@ -47,7 +51,8 @@ export default function TaskBox() {
   const remainingCells = 42 - calendar.length;
   for (let day = 1; day <= remainingCells; day++) {
     calendar.push({
-      day: day,
+      day,
+      date: new Date(year, month + 1, day),
       isCurrentMonth: false,
       isPrevMonth: false,
     });
@@ -70,6 +75,7 @@ export default function TaskBox() {
   const deleteTask = () => {
     setDeleteOpen(true);
   };
+  useEffect(() => {}, []);
   return (
     <>
       <div className="p-4">
@@ -81,7 +87,7 @@ export default function TaskBox() {
           createTask={createTask}
           deleteTask={deleteTask}
         />
-        <TaskCalenderBox calendar={calendar} />
+        <TaskCalenderBox calendar={calendar} taskList={taskList} />
         <div className="taskAddPopUpBox">
           <TaskPopUpBox closePopUpFunction={closePopUp} popUpStatus={open} />
           <TaskPopUpDeleteBox
