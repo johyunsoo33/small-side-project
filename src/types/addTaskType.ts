@@ -4,3 +4,7 @@ export interface addTaskProps {
   startDate: string;
   endDate: string;
 }
+
+export interface TaskProps extends addTaskProps {
+  _id: string;
+}

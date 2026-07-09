@@ -10,6 +10,7 @@ app.use(
 );
 const PORT = process.env.PORT || 4000;
 
+// 테스크
 app.listen(PORT, () => {
   console.log(`서버가 ${PORT}번으로 시작하였습니다.`);
 });
@@ -27,5 +28,23 @@ app.put("/api/tasks/put/:_id", async (req, res) => {
 });
 app.delete("/api/tasks/delete/:_id", async (req, res) => {
   const r = await deleteByID("Task", req.params._id);
+  res.send(r);
+});
+
+// 메모
+app.get("/api/memos/get", async (req, res) => {
+  const memos = await find("Memo");
+  res.send(memos);
+});
+app.post("/api/memos/post", async (req, res) => {
+  const r = await insert("Memo", req.body.param);
+  res.send(r);
+});
+app.put("/api/memos/put/:_id", async (req, res) => {
+  const r = await update("Memo", req.body.param, req.params._id);
+  res.send(r);
+});
+app.delete("/api/memos/delete/:_id", async (req, res) => {
+  const r = await deleteByID("Memo", req.params._id);
   res.send(r);
 });
