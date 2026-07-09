@@ -1,6 +1,6 @@
 import Image from "next/image";
 interface MemoItemProps {
-  imgSrc: string;
+  imgSrc?: string;
   title: string;
   content: string;
   startAt: string;
@@ -47,9 +47,9 @@ export default function MemoItem({
             imgSrc ? "col-start-2" : "col-start-1"
           }`}
         >
-          <time>{startAt}</time>
+          <time>{startAt.split("T")[0]}</time>
           <span>~</span>
-          <time>{deadLineAt}</time>
+          <time>{deadLineAt.split("T")[0]}</time>
         </div>
         <div
           className={`row-start-3 text-sm text-white/70 truncate ${
