@@ -1,48 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, ListChecks, Trash2 } from "lucide-react";
+import { TaskProps } from "@/src/types/addTaskType";
+import { deleteTasks } from "@/src/functions/CalenderTaskAdd";
+import { useRouter } from "next/navigation";
 
 interface TaskPopUpDeleteProps {
   closePopUpFunction: () => void;
   popUpStatus: boolean;
   selectedDate?: Date;
+  taskList: TaskProps[];
 }
 
-interface TaskItem {
-  id: string;
-  title: string;
-  content?: string;
-  startDate?: Date;
-  endDate?: Date;
-}
-
-// TODO: 실제로는 selectedDate 기준으로 서버/store에서 목록을 받아와야 함
-const DUMMY_TASKS: TaskItem[] = [
-  {
-    id: "1",
-    title: "팀 회의 자료 준비",
-    content: "회의 자료를 준비하고 공유합니다.",
-    startDate: new Date(),
-    endDate: new Date(),
-  },
-];
-
-const formatDateRange = (start?: Date, end?: Date) => {
+const formatDateRange = (start?: string, end?: string) => {
   if (!start && !end) return null;
   const fmt = (d: Date) =>
     d.toLocaleDateString("ko-KR", { month: "short", day: "numeric" });
-  if (start && end && start.toDateString() === end.toDateString()) {
-    return fmt(start);
+  const startDate = start ? new Date(start) : undefined;
+  const endDate = end ? new Date(end) : undefined;
+  if (
+    startDate &&
+    endDate &&
+    startDate.toDateString() === endDate.toDateString()
+  ) {
+    return fmt(startDate);
   }
-  if (start && end) return `${fmt(start)} ~ ${fmt(end)}`;
-  return fmt((start ?? end) as Date);
+  if (startDate && endDate) return `${fmt(startDate)} ~ ${fmt(endDate)}`;
+  return fmt((startDate ?? endDate) as Date);
 };
 
 export default function TaskPopUpDeleteBox({
   closePopUpFunction,
   popUpStatus,
   selectedDate,
+  taskList,
 }: TaskPopUpDeleteProps) {
   const date = selectedDate ?? new Date();
   const dateLabel = date.toLocaleDateString("ko-KR", {
@@ -51,17 +43,26 @@ export default function TaskPopUpDeleteBox({
     weekday: "short",
   });
 
-  const [tasks, setTasks] = useState<TaskItem[]>(DUMMY_TASKS);
+  const [tasks, setTasks] = useState<TaskProps[]>(taskList || []);
+
+  const router = useRouter();
+  useEffect(() => {
+    setTasks(taskList);
+  }, [taskList]);
 
   const handleDeleteTask = (id: string) => {
-    // TODO: 실제로는 여기서 삭제 API 호출 후 성공 시 setTasks
-    setTasks((prev) => prev.filter((task) => task.id !== id));
+    setTasks((prev) => prev.filter((task) => task._id !== id));
+    deleteTasks(id);
   };
 
   const stopPopUpClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
 
+  useEffect(() => {
+    setTasks(taskList);
+    router.refresh();
+  }, []);
   return popUpStatus ? (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0F1A]/50 backdrop-blur-sm"
@@ -105,7 +106,7 @@ export default function TaskPopUpDeleteBox({
                 );
                 return (
                   <li
-                    key={task.id}
+                    key={task._id}
                     className="group flex items-start justify-between gap-2 rounded-lg border border-[#0B0F1A]/8 bg-[#FAFAFC] px-3 py-2.5 transition-colors duration-150"
                   >
                     <div className="min-w-0 flex-1">
@@ -126,7 +127,7 @@ export default function TaskPopUpDeleteBox({
                     <button
                       type="button"
                       aria-label={`${task.title} 삭제`}
-                      onClick={() => handleDeleteTask(task.id)}
+                      onClick={() => handleDeleteTask(task._id)}
                       className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-[#0B0F1A]/35 transition-all duration-100 hover:bg-red-50 hover:text-red-500 active:scale-90 active:bg-red-100"
                     >
                       <Trash2 size={13} />

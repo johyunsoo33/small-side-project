@@ -42,6 +42,22 @@ export async function calenderAddTask(
   }
 }
 
+export async function deleteTasks(id: string): ApiResPromise<TaskProps> {
+  try {
+    const res = await axios.delete<TaskProps>(
+      `${API_URL}/api/tasks/delete/${id}`,
+    );
+    return {
+      ok: 1,
+      message: "일정을 삭제하였습니다",
+      item: res.data,
+    };
+  } catch (error) {
+    console.log("error", error);
+    return { ok: 0, message: "일정을 삭제하는데 실패하였습니다" };
+  }
+}
+
 export async function getMemos() {
   try {
     const res = await axios.get<TaskProps[]>(`${API_URL}/api/memos/get`);

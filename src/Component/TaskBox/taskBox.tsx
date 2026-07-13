@@ -93,6 +93,7 @@ export default function TaskBox({ taskList }: { taskList: TaskProps[] }) {
           <TaskPopUpDeleteBox
             closePopUpFunction={() => setDeleteOpen(false)}
             popUpStatus={deleteOpen}
+            taskList={taskList}
           />
         </div>
       </div>

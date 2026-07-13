@@ -5,7 +5,6 @@ import { getMemos } from "@/src/functions/CalenderTaskAdd";
 export default async function MyMemo() {
   const data = await getMemos();
   const memoList = data.ok ? (data.item ?? []) : [];
-  console.log("memoList", memoList);
   return (
     <>
       <Header />
