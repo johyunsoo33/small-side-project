@@ -11,10 +11,12 @@ interface TaskCalenderBoxProps {
   calendar: CalendarDate[];
 }
 
+// Date를 "YYYY-MM-DD" 문자열로 변환 (task.startDate/endDate와 같은 포맷으로 맞춰서 비교하기 위함)
 function toDateKey(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
+// 문자열 비교로 startDate <= 셀 날짜 <= endDate 범위에 포함되는 태스크만 걸러냄 (YYYY-MM-DD는 사전순 정렬이 날짜순 정렬과 같아서 문자열 비교가 가능)
 function getTasksForDate(taskList: TaskProps[], date: Date) {
   const dateKey = toDateKey(date);
   return taskList.filter(
@@ -50,7 +52,7 @@ export default function TaskCalenderBox({
                 {tasksForDate.map((task) => (
                   <div
                     key={task._id}
-                    className="truncate rounded bg-[#4F5DFF] px-1 text-xs text-white"
+                    className="truncate rounded bg-[#4F5DFF] px-1 text-xs text-white min-w-8/10 max-w-9/10 mx-auto"
                     title={task.title}
                   >
                     {task.title}

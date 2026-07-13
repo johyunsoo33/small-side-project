@@ -1,7 +1,14 @@
 "use client";
 
-import type { ChangeEvent, MouseEvent } from "react";
+import {
+  useActionState,
+  useEffect,
+  type ChangeEvent,
+  type MouseEvent,
+} from "react";
+import { useRouter } from "next/navigation";
 import { X, CalendarPlus } from "lucide-react";
+import { calenderAddTask } from "@/src/functions/CalenderTaskAdd";
 
 interface TaskPopUpProps {
   closePopUpFunction: () => void;
@@ -21,9 +28,15 @@ export default function TaskPopUpBox({
     .toUpperCase();
   const weekday = date.toLocaleDateString("ko-KR", { weekday: "short" });
 
-  const handleAddTask = () => {
-    // 할 일 추가 로직 구현
-  };
+  const router = useRouter();
+  const [state, formAction, isLoading] = useActionState(calenderAddTask, null);
+
+  useEffect(() => {
+    if (state?.ok === 1) {
+      router.refresh();
+      closePopUpFunction();
+    }
+  }, [state]);
 
   const taskAddContentArea = (event: ChangeEvent<HTMLTextAreaElement>) => {
     event.target.style.height = "auto";
@@ -76,11 +89,16 @@ export default function TaskPopUpBox({
           </header>
 
           <main>
-            <form action="" className="flex flex-col gap-4">
+            <form
+              action={formAction}
+              className="flex flex-col gap-4"
+              id="task-form"
+            >
               {/* 제목 - 플로팅 라벨 (박스형) */}
               <div className="relative">
                 <input
                   id="task-title"
+                  name="title"
                   type="text"
                   placeholder=" "
                   className="peer w-full rounded-lg border border-[#0B0F1A]/10 bg-white px-3 pb-2 pt-5 text-sm text-[#0B0F1A] outline-none transition-all duration-200 focus:border-[#4F5DFF] focus:ring-2 focus:ring-[#4F5DFF]/15"
@@ -97,7 +115,7 @@ export default function TaskPopUpBox({
               <div className="relative">
                 <textarea
                   id="task-desc"
-                  name="description"
+                  name="content"
                   placeholder=" "
                   rows={2}
                   onChange={taskAddContentArea}
@@ -116,6 +134,7 @@ export default function TaskPopUpBox({
                 <div className="relative">
                   <input
                     id="task-start-date"
+                    name="startDate"
                     type="date"
                     className="w-full rounded-lg border border-[#0B0F1A]/10 bg-white px-3 pb-2 pt-5 text-xs text-[#0B0F1A] outline-none transition-all duration-200 focus:border-[#4F5DFF] focus:ring-2 focus:ring-[#4F5DFF]/15"
                   />
@@ -129,6 +148,7 @@ export default function TaskPopUpBox({
                 <div className="relative">
                   <input
                     id="task-end-date"
+                    name="endDate"
                     type="date"
                     className="w-full rounded-lg border border-[#0B0F1A]/10 bg-white px-3 pb-2 pt-5 text-xs text-[#0B0F1A] outline-none transition-all duration-200 focus:border-[#4F5DFF] focus:ring-2 focus:ring-[#4F5DFF]/15"
                   />
@@ -152,8 +172,8 @@ export default function TaskPopUpBox({
               닫기
             </button>
             <button
-              type="button"
-              onClick={handleAddTask}
+              type="submit"
+              form="task-form"
               className="rounded-lg bg-[#4F5DFF] px-5 py-2 text-sm font-medium text-white transition-all duration-100 hover:bg-[#3A46D6] active:scale-95 active:brightness-90"
             >
               추가하기
