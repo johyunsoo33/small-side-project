@@ -1,8 +1,15 @@
 const express = require("express");
 require("dotenv").config({ path: "./mongoDB/.env" });
 const { find, insert, update, deleteByID } = require("./mongoDB/index");
+const cors = require("cors");
 const app = express();
 
+const corsOption = {
+  origin: "http://localhost:3000", // 허용할 Origin 설정
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOption));
 app.use(
   express.json({
     limit: "50mb",
