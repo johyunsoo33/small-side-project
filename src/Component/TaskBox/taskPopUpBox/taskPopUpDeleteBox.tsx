@@ -15,19 +15,12 @@ interface TaskPopUpDeleteProps {
 
 const formatDateRange = (start?: string, end?: string) => {
   if (!start && !end) return null;
-  const fmt = (d: Date) =>
-    d.toLocaleDateString("ko-KR", { month: "short", day: "numeric" });
-  const startDate = start ? new Date(start) : undefined;
-  const endDate = end ? new Date(end) : undefined;
-  if (
-    startDate &&
-    endDate &&
-    startDate.toDateString() === endDate.toDateString()
-  ) {
-    return fmt(startDate);
-  }
-  if (startDate && endDate) return `${fmt(startDate)} ~ ${fmt(endDate)}`;
-  return fmt((startDate ?? endDate) as Date);
+  const fmt = (d: string) =>
+    new Date(d).toLocaleDateString("ko-KR", { month: "short", day: "numeric" });
+  if (!start || !end) return fmt((start ?? end)!);
+  const sameDay =
+    new Date(start).toDateString() === new Date(end).toDateString();
+  return sameDay ? fmt(start) : `${fmt(start)} ~ ${fmt(end)}`;
 };
 
 export default function TaskPopUpDeleteBox({
@@ -57,6 +50,7 @@ export default function TaskPopUpDeleteBox({
 
   const stopPopUpClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+    router.refresh();
   };
 
   useEffect(() => {

@@ -5,7 +5,6 @@ import { getTasks } from "@/src/functions/CalenderTaskAdd";
 export default async function MySchedule() {
   const data = await getTasks();
   const taskList = data.ok ? (data.item ?? []) : [];
-  console.log("taskList", taskList);
   return (
     <>
       <Header />
