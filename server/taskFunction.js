@@ -3,6 +3,8 @@ require("dotenv").config({ path: "./mongoDB/.env" });
 const { find, insert, update, deleteByID } = require("./mongoDB/index");
 const cors = require("cors");
 const app = express();
+const multer = require("multer");
+const path = require("path");
 
 const corsOption = {
   origin: "http://localhost:3000", // 허용할 Origin 설정
