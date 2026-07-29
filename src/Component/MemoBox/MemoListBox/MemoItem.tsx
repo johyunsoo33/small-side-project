@@ -39,6 +39,7 @@ export default function MemoItem({
             src={imgSrc}
             width={50}
             height={50}
+            unoptimized
             className="col-start-1 row-start-1 row-span-3 w-full h-full self-stretch rounded-md object-cover"
           />
         ) : (

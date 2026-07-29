@@ -1,7 +1,14 @@
 "use client";
 
-import type { ChangeEvent, MouseEvent } from "react";
+import {
+  useActionState,
+  useEffect,
+  type ChangeEvent,
+  type MouseEvent,
+} from "react";
+import { useRouter } from "next/navigation";
 import { X, Pin } from "lucide-react";
+import { AddMemo } from "@/src/functions/CalenderTaskAdd";
 
 interface MemoPopUpProps {
   closePopUpFunction: () => void;
@@ -20,6 +27,16 @@ export default function MemoPopUp({
   const stopPopUpClick = (event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
+
+  const [state, formAction, isLoading] = useActionState(AddMemo, null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state?.ok === 1) {
+      closePopUpFunction();
+      router.refresh();
+    }
+  }, [state]);
 
   return popUpStatus ? (
     <div
@@ -52,11 +69,16 @@ export default function MemoPopUp({
           </header>
 
           <main>
-            <form action="" className="flex flex-col gap-5">
+            <form
+              id="memo-form"
+              action={formAction}
+              className="flex flex-col gap-5"
+            >
               {/* 제목 - 플로팅 라벨 */}
               <div className="relative">
                 <input
                   id="memo-title"
+                  name="title"
                   type="text"
                   placeholder=" "
                   className="peer w-full border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
@@ -73,7 +95,7 @@ export default function MemoPopUp({
               <div className="relative">
                 <textarea
                   id="memo-desc"
-                  name="description"
+                  name="content"
                   placeholder=" "
                   rows={2}
                   onChange={MemoAddContentArea}
@@ -92,6 +114,7 @@ export default function MemoPopUp({
                 <div className="relative">
                   <input
                     id="start-date"
+                    name="startDate"
                     type="date"
                     className="w-full border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-sm text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
                   />
@@ -105,6 +128,7 @@ export default function MemoPopUp({
                 <div className="relative">
                   <input
                     id="end-date"
+                    name="endDate"
                     type="date"
                     className="w-full border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-sm text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
                   />
@@ -115,6 +139,20 @@ export default function MemoPopUp({
                     마감일
                   </label>
                 </div>
+              </div>
+
+              {/* 첨부 이미지 */}
+              <div className="relative">
+                <label className="mb-1 block text-xs font-medium text-[#2B2620]/50">
+                  첨부 이미지
+                </label>
+                <input
+                  id="memo-attachment"
+                  name="attachment"
+                  type="file"
+                  accept="image/*"
+                  className="w-full text-sm text-[#2B2620]/70 file:mr-3 file:rounded-sm file:border-0 file:bg-[#2B2620]/10 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-[#2B2620] hover:file:bg-[#2B2620]/20"
+                />
               </div>
             </form>
           </main>
@@ -128,10 +166,12 @@ export default function MemoPopUp({
               닫기
             </button>
             <button
-              type="button"
-              className="rounded-sm bg-[#E8604C] px-5 py-2 text-sm font-medium text-[#FDF6E9] shadow-[3px_3px_0_0_#2B2620] transition-all duration-100 hover:brightness-105 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
+              type="submit"
+              form="memo-form"
+              disabled={isLoading}
+              className="rounded-sm bg-[#E8604C] px-5 py-2 text-sm font-medium text-[#FDF6E9] shadow-[3px_3px_0_0_#2B2620] transition-all duration-100 hover:brightness-105 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none disabled:opacity-60"
             >
-              추가하기
+              {isLoading ? "추가하는 중..." : "추가하기"}
             </button>
           </footer>
         </div>
