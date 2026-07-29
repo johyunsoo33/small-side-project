@@ -6,6 +6,18 @@ const app = express();
 const multer = require("multer");
 const path = require("path");
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads");
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().valueOf() + path.extname(file.originalname));
+  },
+});
+
+// 위에서 만든 저장 설정을 multer에 등록합니다.
+const upload = multer({ storage: storage });
+
 const corsOption = {
   origin: "http://localhost:3000", // 허용할 Origin 설정
   optionSuccessStatus: 200,
@@ -45,9 +57,21 @@ app.get("/api/memos/get", async (req, res) => {
   const memos = await find("Memo");
   res.send(memos);
 });
-app.post("/api/memos/post", async (req, res) => {
-  const r = await insert("Memo", req.body.param);
-  res.send(r);
+app.post("/api/memos/post", upload.single("attachment"), async (req, res) => {
+  try {
+    const param = JSON.parse(req.body.param);
+    if (req.file) {
+      param.attachment = {
+        filename: req.file.filename,
+        originalname: req.file.originalname,
+        path: req.file.path,
+      };
+    }
+    const r = await insert("Memo", param);
+    res.send({ ...r, file: req.file });
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
 });
 app.put("/api/memos/put/:_id", async (req, res) => {
   const r = await update("Memo", req.body.param, req.params._id);
