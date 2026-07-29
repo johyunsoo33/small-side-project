@@ -12,7 +12,7 @@ const useRecentMemoStore = create<RecentMemoState>()(
     (set, get) => ({
       recentIds: [],
       addRecent: (id) => {
-        const filtered = get().recentIds.filter((v) => v !== id);
+        const filtered = get().recentIds.filter((v) => v !== id); // 중복 제거
         set({ recentIds: [id, ...filtered].slice(0, 10) }); // 최근 10개만
       },
       resetRecent: () => set({ recentIds: [] }),
@@ -23,3 +23,5 @@ const useRecentMemoStore = create<RecentMemoState>()(
     },
   ),
 );
+
+export default useRecentMemoStore;

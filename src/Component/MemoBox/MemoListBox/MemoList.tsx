@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MemoProps } from "@/src/types/addTaskType";
 import MemoItem from "./MemoItem";
 import MemoDetail from "../MemoDetailBox/MemoDetail";
+import useRecentMemoStore from "@/src/Hook/useHistoryHook";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,6 +19,7 @@ export default function MemoList({ memoList }: { memoList: MemoProps[] }) {
             key={item._id}
             onClick={() => {
               setSelectedMemo(item);
+              addRecent(item._id);
             }}
             imgSrc={
               item?.attachment
