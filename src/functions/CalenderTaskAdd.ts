@@ -81,14 +81,25 @@ export async function AddMemo(
   formData: FormData,
 ): ApiResPromise<MemoProps> {
   try {
-    const res = await axios.post<MemoProps>(`${API_URL}/api/memos/post`, {
-      param: {
+    const uploadData = new FormData();
+    uploadData.append(
+      "param",
+      JSON.stringify({
         title: formData.get("title") as string,
         content: formData.get("content") as string,
         startDate: formData.get("startDate") as string,
         endDate: formData.get("endDate") as string,
-      },
-    });
+      }),
+    );
+    const attachment = formData.get("attachment") as File | null;
+    if (attachment && attachment.size > 0) {
+      uploadData.append("attachment", attachment);
+    }
+
+    const res = await axios.post<MemoProps>(
+      `${API_URL}/api/memos/post`,
+      uploadData,
+    );
     console.log("res", res);
     return {
       ok: 1,

@@ -8,8 +8,14 @@ export interface addTaskProps {
 export interface TaskProps extends addTaskProps {
   _id: string;
 }
+export interface MemoAttachment {
+  filename: string;
+  originalname: string;
+  path: string;
+}
+
 export interface addMemoProps {
-  imgSrc?: string;
+  attachment?: MemoAttachment;
   title: string;
   content: string;
   startDate: string;
