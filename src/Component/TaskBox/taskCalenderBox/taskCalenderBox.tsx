@@ -1,4 +1,7 @@
+"use client";
+
 import { TaskProps } from "@/src/types/addTaskType";
+import useRecentMemoStore from "@/src/Hook/useHistoryHook";
 
 export interface CalendarDate {
   day: number;
@@ -28,6 +31,8 @@ export default function TaskCalenderBox({
   calendar,
   taskList,
 }: TaskCalenderBoxProps & { taskList: TaskProps[] }) {
+  const addRecent = useRecentMemoStore((state) => state.addRecent);
+
   return (
     <div className="taskCalenderBox max-w-11/12 mt-10 m-auto">
       <div className="taskCalender grid grid-cols-7 gap-4">
@@ -52,7 +57,8 @@ export default function TaskCalenderBox({
                 {tasksForDate.map((task) => (
                   <div
                     key={task._id}
-                    className="truncate rounded bg-[#4F5DFF] px-1 text-xs text-white min-w-8/10 max-w-9/10 mx-auto"
+                    onClick={() => addRecent("task", task._id)}
+                    className="truncate rounded bg-[#4F5DFF] px-1 text-xs text-white min-w-8/10 max-w-9/10 mx-auto cursor-pointer"
                     title={task.title}
                   >
                     {task.title}

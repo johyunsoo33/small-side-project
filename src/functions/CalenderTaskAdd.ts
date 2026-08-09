@@ -1,5 +1,10 @@
 import axios from "axios";
-import { MemoProps, TaskProps } from "../types/addTaskType";
+import {
+  MemoProps,
+  RecentDoc,
+  RecentRef,
+  TaskProps,
+} from "../types/addTaskType";
 import { ApiRes, ApiResPromise } from "../types/api";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -109,6 +114,29 @@ export async function AddMemo(
   } catch (error) {
     console.log("error", error);
     return { ok: 0, message: "메모를 생성하는데 실패 하였습니다" };
+  }
+}
+
+// 최근 본 문서
+
+// (type, _id) 목록을 넘기면 컬렉션을 넘나들며 조회해 최근 순서대로 돌려준다.
+// 이미 삭제된 문서는 응답에서 빠지므로 개수가 줄어들 수 있다.
+export async function getRecentDocs(refs: RecentRef[]) {
+  if (refs.length === 0) {
+    return { ok: 1, message: "최근 본 문서가 없습니다", item: [] as RecentDoc[] };
+  }
+  try {
+    const res = await axios.post<RecentDoc[]>(`${API_URL}/api/recent/post`, {
+      param: refs,
+    });
+    return {
+      ok: 1,
+      message: "최근 본 문서를 불러왔습니다",
+      item: res.data,
+    };
+  } catch (error) {
+    console.log("error", error);
+    return { ok: 0, message: "최근 본 문서를 불러오지 못했습니다" };
   }
 }
 
