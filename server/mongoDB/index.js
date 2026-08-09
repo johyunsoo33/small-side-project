@@ -18,6 +18,25 @@ const find = async (collectionName, condition = {}) => {
   return r;
 };
 
+// 여러 컬렉션을 한 번에 조회한다.
+// _id 만으로는 어느 컬렉션에서 나온 문서인지 알 수 없으므로 출처를 함께 붙여서 반환한다.
+const findMany = async (collectionNames, condition = {}) => {
+  const results = await Promise.all(
+    collectionNames.map(async (name) => {
+      const docs = await find(name, condition);
+      return docs.map((doc) => ({ ...doc, collection: name }));
+    }),
+  );
+  return results.flat();
+};
+
+// 한 컬렉션에서 _id 목록으로 한 번에 조회한다.
+const findByIds = async (collectionName, ids) => {
+  const objectIds = ids.filter((id) => ObjectId.isValid(id)).map((id) => new ObjectId(id));
+  if (objectIds.length === 0) return [];
+  return find(collectionName, { _id: { $in: objectIds } });
+};
+
 const insert = async (collectionName, data) => {
   const r = await mongoDB.collection(collectionName).insertOne(data);
   return r;
@@ -47,6 +66,8 @@ const deleteByID = async (collectionName, _id) => {
 
 module.exports = {
   find,
+  findMany,
+  findByIds,
   insert,
   insertMany,
   update,
