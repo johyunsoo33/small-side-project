@@ -27,7 +27,9 @@ export default function RecentBox({ taskList, memoList }: RecentBoxProps) {
     taskList.forEach((task) => docMap.set(task._id, { ...task, type: "task" }));
     memoList.forEach((memo) => docMap.set(memo._id, { ...memo, type: "memo" }));
 
-    // 최근 순서대로 꺼낸다. 삭제된 문서는 Map 에 없으므로 자연히 빠진다
+    // 최근 순서대로 꺼낸다. 삭제된 문서는 Map 에 없으므로 자연히 빠진다.
+    // 렌더 중에 계산하면(useMemo) 서버 HTML 과 어긋나므로 마운트 후로 미루는 게 의도된 동작이다.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDocs(
       recentIds
         .map((id) => docMap.get(id))
