@@ -1,6 +1,6 @@
 const express = require("express");
 require("dotenv").config({ path: "./mongoDB/.env" });
-const { find, findByIds, insert, update, deleteByID } = require("./mongoDB/index");
+const { find, insert, update, deleteByID } = require("./mongoDB/index");
 const cors = require("cors");
 const app = express();
 const multer = require("multer");
@@ -84,42 +84,45 @@ app.delete("/api/memos/delete/:_id", async (req, res) => {
 });
 
 // 최근 본 문서
+// 최근 목록은 클라이언트가 sessionStorage 에 들고 있고, 카드 내용은
+// 기존 /api/tasks/get, /api/memos/get 응답에서 찾아 쓰므로 서버 조회가 필요 없다.
+
 // 클라이언트가 컬렉션명을 직접 넘기지 못하도록 type 으로만 받아서 서버에서 매핑한다.
-const COLLECTION_BY_TYPE = {
-  task: "Task",
-  memo: "Memo",
-};
+// const COLLECTION_BY_TYPE = {
+//   task: "Task",
+//   memo: "Memo",
+// };
 
-app.post("/api/recent/post", async (req, res) => {
-  try {
-    const refs = Array.isArray(req.body.param) ? req.body.param : [];
-    const validRefs = refs.filter((ref) => COLLECTION_BY_TYPE[ref?.type] && ref?._id);
+// app.post("/api/recent/post", async (req, res) => {
+//   try {
+//     const refs = Array.isArray(req.body.param) ? req.body.param : [];
+//     const validRefs = refs.filter((ref) => COLLECTION_BY_TYPE[ref?.type] && ref?._id);
 
-    // type 별로 묶어서 컬렉션마다 한 번씩만 조회한다
-    const idsByType = {};
-    for (const { type, _id } of validRefs) {
-      (idsByType[type] ||= []).push(_id);
-    }
+//     // type 별로 묶어서 컬렉션마다 한 번씩만 조회한다
+//     const idsByType = {};
+//     for (const { type, _id } of validRefs) {
+//       (idsByType[type] ||= []).push(_id);
+//     }
 
-    const found = await Promise.all(
-      Object.entries(idsByType).map(async ([type, ids]) => {
-        const docs = await findByIds(COLLECTION_BY_TYPE[type], ids);
-        // 조회 결과에 출처(type)를 붙여야 클라이언트에서 어떤 카드인지 구분할 수 있다
-        return docs.map((doc) => ({ ...doc, type }));
-      }),
-    );
+//     const found = await Promise.all(
+//       Object.entries(idsByType).map(async ([type, ids]) => {
+//         const docs = await findByIds(COLLECTION_BY_TYPE[type], ids);
+//         // 조회 결과에 출처(type)를 붙여야 클라이언트에서 어떤 카드인지 구분할 수 있다
+//         return docs.map((doc) => ({ ...doc, type }));
+//       }),
+//     );
 
-    // (type, _id) 복합키로 찾아 클라이언트가 보낸 최근 순서 그대로 되돌려준다.
-    // 삭제된 문서는 조회되지 않으므로 자연스럽게 빠진다.
-    const docMap = new Map(
-      found.flat().map((doc) => [`${doc.type}:${doc._id}`, doc]),
-    );
-    const ordered = validRefs
-      .map((ref) => docMap.get(`${ref.type}:${ref._id}`))
-      .filter(Boolean);
+//     // (type, _id) 복합키로 찾아 클라이언트가 보낸 최근 순서 그대로 되돌려준다.
+//     // 삭제된 문서는 조회되지 않으므로 자연스럽게 빠진다.
+//     const docMap = new Map(
+//       found.flat().map((doc) => [`${doc.type}:${doc._id}`, doc]),
+//     );
+//     const ordered = validRefs
+//       .map((ref) => docMap.get(`${ref.type}:${ref._id}`))
+//       .filter(Boolean);
 
-    res.send(ordered);
-  } catch (err) {
-    res.status(500).send({ error: err.message });
-  }
-});
+//     res.send(ordered);
+//   } catch (err) {
+//     res.status(500).send({ error: err.message });
+//   }
+// });
