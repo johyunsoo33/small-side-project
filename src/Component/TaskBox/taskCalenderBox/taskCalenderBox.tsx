@@ -57,7 +57,7 @@ export default function TaskCalenderBox({
                 {tasksForDate.map((task) => (
                   <div
                     key={task._id}
-                    onClick={() => addRecent("task", task._id)}
+                    onClick={() => addRecent(task._id)}
                     className="truncate rounded bg-[#4F5DFF] px-1 text-xs text-white min-w-8/10 max-w-9/10 mx-auto cursor-pointer"
                     title={task.title}
                   >
