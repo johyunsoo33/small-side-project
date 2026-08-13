@@ -19,7 +19,7 @@ export default function MemoList({ memoList }: { memoList: MemoProps[] }) {
             key={item._id}
             onClick={() => {
               setSelectedMemo(item);
-              addRecent("memo", item._id);
+              addRecent(item._id);
             }}
             imgSrc={
               item?.attachment

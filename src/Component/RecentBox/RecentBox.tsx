@@ -3,27 +3,37 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { CalendarDays, StickyNote } from "lucide-react";
-import { RecentDoc } from "@/src/types/addTaskType";
-import { getRecentDocs } from "@/src/functions/CalenderTaskAdd";
+import { MemoProps, RecentDoc, TaskProps } from "@/src/types/addTaskType";
 import useRecentMemoStore from "@/src/Hook/useHistoryHook";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function RecentBox() {
-  const recentRefs = useRecentMemoStore((state) => state.recentRefs);
+interface RecentBoxProps {
+  taskList: TaskProps[];
+  memoList: MemoProps[];
+}
+
+export default function RecentBox({ taskList, memoList }: RecentBoxProps) {
+  const recentIds = useRecentMemoStore((state) => state.recentIds);
   const resetRecent = useRecentMemoStore((state) => state.resetRecent);
+
+  // sessionStorage 는 서버에 없어서 SSR 때 recentIds 가 비어 있다.
+  // docs 를 빈 배열로 시작시켜야 서버 HTML 과 첫 클라이언트 렌더가 어긋나지 않는다.
   const [docs, setDocs] = useState<RecentDoc[]>([]);
 
-  // recentRefs 가 바뀔 때마다 서버에 (type, _id) 목록을 보내 문서를 다시 불러온다
   useEffect(() => {
-    let alive = true;
-    getRecentDocs(recentRefs).then((res) => {
-      if (alive) setDocs(res.ok ? ((res.item ?? []) as RecentDoc[]) : []);
-    });
-    return () => {
-      alive = false;
-    };
-  }, [recentRefs]);
+    // 두 목록을 _id 하나로 찾을 수 있게 합친다. 어느 목록에서 나왔는지가 곧 type 이다
+    const docMap = new Map<string, RecentDoc>();
+    taskList.forEach((task) => docMap.set(task._id, { ...task, type: "task" }));
+    memoList.forEach((memo) => docMap.set(memo._id, { ...memo, type: "memo" }));
+
+    // 최근 순서대로 꺼낸다. 삭제된 문서는 Map 에 없으므로 자연히 빠진다
+    setDocs(
+      recentIds
+        .map((id) => docMap.get(id))
+        .filter((doc): doc is RecentDoc => Boolean(doc)),
+    );
+  }, [recentIds, taskList, memoList]);
 
   return (
     <section className="max-w-10/12 m-auto mt-10 w-full">
@@ -51,9 +61,8 @@ export default function RecentBox() {
                 : undefined;
 
             return (
-              // type 을 같이 써야 컬렉션이 달라도 키가 겹치지 않는다
               <li
-                key={`${doc.type}:${doc._id}`}
+                key={doc._id}
                 className="flex flex-col gap-2 rounded-lg bg-gray-300/20 p-4"
               >
                 <div className="flex items-center gap-1.5 text-xs text-white/55">
