@@ -31,7 +31,9 @@ export default function TaskCalenderBox({
   calendar,
   taskList,
 }: TaskCalenderBoxProps & { taskList: TaskProps[] }) {
-  const addRecent = useRecentMemoStore((state) => state.addRecent);
+  const addRecent = useRecentMemoStore(
+    (state: { addRecent: (id: string) => void }) => state.addRecent,
+  );
 
   return (
     <div className="taskCalenderBox max-w-11/12 mt-10 m-auto">
