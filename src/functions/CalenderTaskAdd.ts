@@ -151,3 +151,38 @@ export async function deleteMemo(id: string): ApiResPromise<MemoProps> {
     return { ok: 0, message: "메모를 삭제하는데 실패하였습니다" };
   }
 }
+export async function EditMemo(
+  state: ApiRes<MemoProps> | null,
+  formData: FormData,
+): ApiResPromise<MemoProps> {
+  try {
+    const uploadData = new FormData();
+    uploadData.append(
+      "param",
+      JSON.stringify({
+        title: formData.get("title") as string,
+        content: formData.get("content") as string,
+        startDate: formData.get("startDate") as string,
+        endDate: formData.get("endDate") as string,
+      }),
+    );
+    const attachment = formData.get("attachment") as File | null;
+    if (attachment && attachment.size > 0) {
+      uploadData.append("attachment", attachment);
+    }
+
+    const res = await axios.post<MemoProps>(
+      `${API_URL}/api/memos/put/${formData.get("id")}`,
+      uploadData,
+    );
+    console.log("res", res);
+    return {
+      ok: 1,
+      message: "메모를 수정 하였습니다",
+      item: res.data,
+    };
+  } catch (error) {
+    console.log("error", error);
+    return { ok: 0, message: "메모를 수정하는데 실패 하였습니다" };
+  }
+}

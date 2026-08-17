@@ -4,12 +4,14 @@ import { useState } from "react";
 import { MemoProps } from "@/src/types/addTaskType";
 import MemoItem from "./MemoItem";
 import MemoDetail from "../MemoDetailBox/MemoDetail";
+import MemoEditPopUp from "../MemoEditPopUp/MemoEditPopUp";
 import useRecentMemoStore from "@/src/Hook/useHistoryHook";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function MemoList({ memoList }: { memoList: MemoProps[] }) {
   const [selectedMemo, setSelectedMemo] = useState<MemoProps | null>(null);
+  const [editingMemo, setEditingMemo] = useState<MemoProps | null>(null);
   const { addRecent } = useRecentMemoStore();
   return (
     <>
@@ -21,6 +23,7 @@ export default function MemoList({ memoList }: { memoList: MemoProps[] }) {
               setSelectedMemo(item);
               addRecent(item._id);
             }}
+            onEdit={() => setEditingMemo(item)}
             imgSrc={
               item?.attachment
                 ? `${API_URL}/uploads/${item.attachment.filename}`
@@ -37,6 +40,7 @@ export default function MemoList({ memoList }: { memoList: MemoProps[] }) {
       {selectedMemo && (
         <MemoDetail memo={selectedMemo} onClose={() => setSelectedMemo(null)} />
       )}
+      <MemoEditPopUp memo={editingMemo} onClose={() => setEditingMemo(null)} />
     </>
   );
 }

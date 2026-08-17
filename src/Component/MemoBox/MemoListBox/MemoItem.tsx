@@ -9,6 +9,7 @@ interface MemoItemProps {
   deadLineAt: string;
   _id: string;
   onClick?: () => void;
+  onEdit?: () => void;
 }
 
 export default function MemoItem({
@@ -19,12 +20,13 @@ export default function MemoItem({
   deadLineAt,
   _id,
   onClick,
+  onEdit,
 }: MemoItemProps) {
   const router = useRouter();
 
   const deleteMemoBtn = (
     event: React.MouseEvent<HTMLButtonElement>,
-    id: string
+    id: string,
   ) => {
     event.stopPropagation();
     deleteMemo(id);
@@ -32,6 +34,7 @@ export default function MemoItem({
   };
   const modifyMemo = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+    onEdit?.();
   };
 
   return (
