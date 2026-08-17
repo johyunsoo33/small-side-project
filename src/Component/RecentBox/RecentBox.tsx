@@ -17,19 +17,13 @@ export default function RecentBox({ taskList, memoList }: RecentBoxProps) {
   const recentIds = useRecentMemoStore((state) => state.recentIds);
   const resetRecent = useRecentMemoStore((state) => state.resetRecent);
 
-  // sessionStorage 는 서버에 없어서 SSR 때 recentIds 가 비어 있다.
-  // docs 를 빈 배열로 시작시켜야 서버 HTML 과 첫 클라이언트 렌더가 어긋나지 않는다.
   const [docs, setDocs] = useState<RecentDoc[]>([]);
 
   useEffect(() => {
-    // 두 목록을 _id 하나로 찾을 수 있게 합친다. 어느 목록에서 나왔는지가 곧 type 이다
     const docMap = new Map<string, RecentDoc>();
     taskList.forEach((task) => docMap.set(task._id, { ...task, type: "task" }));
     memoList.forEach((memo) => docMap.set(memo._id, { ...memo, type: "memo" }));
 
-    // 최근 순서대로 꺼낸다. 삭제된 문서는 Map 에 없으므로 자연히 빠진다.
-    // 렌더 중에 계산하면(useMemo) 서버 HTML 과 어긋나므로 마운트 후로 미루는 게 의도된 동작이다.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDocs(
       recentIds
         .map((id) => docMap.get(id))
