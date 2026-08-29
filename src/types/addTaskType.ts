@@ -7,6 +7,11 @@ export interface addTaskProps {
 
 export interface TaskProps extends addTaskProps {
   _id: string;
+  // 마지막으로 카드를 클릭한 시각(ISO 문자열). 서버 시계로 기록되며, 한 번도 안 봤으면 없다.
+  lastViewedAt?: string;
+  // 최근 24시간 안에 봤는지 여부. DB에 저장된 값이 아니라 서버가 lastViewedAt 으로
+  // 응답할 때마다 계산해서 내려주는 값이므로 클라이언트에서 직접 수정하지 않는다.
+  isRecent?: boolean;
 }
 export interface MemoAttachment {
   filename: string;

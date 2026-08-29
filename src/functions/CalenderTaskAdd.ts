@@ -30,6 +30,7 @@ export async function calenderAddTask(
         content: formData.get("content") as string,
         startDate: formData.get("startDate") as string,
         endDate: formData.get("endDate") as string,
+        // lastViewedAt 은 저장하지 않는다. 값이 없으면 서버가 isRecent: false 로 계산한다.
       },
     });
     console.log("res", res);
@@ -41,6 +42,23 @@ export async function calenderAddTask(
   } catch (error) {
     console.log("error", error);
     return { ok: 0, message: "일정을 생성하는데 실패 하였습니다" };
+  }
+}
+
+// 일정 카드를 클릭했을 때 "마지막으로 본 시각"을 서버에 기록한다.
+// 기록 시각은 서버가 직접 찍으므로 body 로 보낼 값이 없다.
+// isRecent 는 이 시각을 기준으로 조회할 때마다 계산되며, 24시간이 지나면 자동으로 false 가 된다.
+export async function markTaskViewed(id: string): ApiResPromise<TaskProps> {
+  try {
+    const res = await axios.put<TaskProps>(`${API_URL}/api/tasks/view/${id}`);
+    return {
+      ok: 1,
+      message: "최근 조회 시각을 기록했습니다",
+      item: res.data,
+    };
+  } catch (error) {
+    console.log("error", error);
+    return { ok: 0, message: "최근 조회 시각을 기록하지 못했습니다" };
   }
 }
 
