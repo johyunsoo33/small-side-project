@@ -29,6 +29,9 @@ export interface addMemoProps {
 
 export interface MemoProps extends addMemoProps {
   _id: string;
+  // 일정과 동일하게 조회 시각만 저장하고 isRecent 는 서버가 계산해서 내려준다.
+  lastViewedAt?: string;
+  isRecent?: boolean;
 }
 
 // 최근 본 문서 카드는 일정과 메모가 섞여 있다.

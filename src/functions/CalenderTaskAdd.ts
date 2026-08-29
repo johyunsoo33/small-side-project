@@ -154,6 +154,21 @@ export async function AddMemo(
 //   }
 // }
 
+// 메모를 클릭했을 때 "마지막으로 본 시각"을 기록한다. markTaskViewed 와 동작이 같다.
+export async function markMemoViewed(id: string): ApiResPromise<MemoProps> {
+  try {
+    const res = await axios.put<MemoProps>(`${API_URL}/api/memos/view/${id}`);
+    return {
+      ok: 1,
+      message: "최근 조회 시각을 기록했습니다",
+      item: res.data,
+    };
+  } catch (error) {
+    console.log("error", error);
+    return { ok: 0, message: "최근 조회 시각을 기록하지 못했습니다" };
+  }
+}
+
 export async function deleteMemo(id: string): ApiResPromise<MemoProps> {
   try {
     const res = await axios.delete<MemoProps>(
