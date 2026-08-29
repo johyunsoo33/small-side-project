@@ -15,15 +15,12 @@ function viewedTime(doc: RecentDoc) {
 }
 
 export default function RecentBox({ taskList, memoList }: RecentBoxProps) {
-  // isRecent 는 서버가 lastViewedAt 을 기준으로 "최근 24시간 안에 봤는가"를 계산해 내려준 값이다.
-  // 시간이 지나면 서버 응답에서 알아서 빠지므로 클라이언트가 목록을 지울 필요가 없다.
   const docs: RecentDoc[] = [
     ...taskList.map((task) => ({ ...task, type: "task" as const })),
     ...memoList.map((memo) => ({ ...memo, type: "memo" as const })),
   ]
     .filter((doc) => doc.isRecent)
-    .sort((a, b) => viewedTime(b) - viewedTime(a)); // 최근에 본 것부터
-
+    .sort((a, b) => viewedTime(a) - viewedTime(b)); 
   return (
     <section className="max-w-10/12 m-auto mt-10 w-full">
       <header className="mb-4 flex items-center justify-between">
