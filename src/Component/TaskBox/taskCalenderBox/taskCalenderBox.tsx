@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TaskProps } from "@/src/types/addTaskType";
-import useRecentMemoStore from "@/src/Hook/useHistoryHook";
 import { markTaskViewed } from "@/src/functions/CalenderTaskAdd";
 import TaskDetail from "../TaskDetailBox/TaskDetailBox";
 
@@ -35,12 +34,10 @@ export default function TaskCalenderBox({
   calendar,
   taskList,
 }: TaskCalenderBoxProps & { taskList: TaskProps[] }) {
-  const addRecent = useRecentMemoStore((state) => state.addRecent);
   const [selectedTask, setSelectedTask] = useState<TaskProps | null>(null);
   const router = useRouter();
 
   const openTaskDetail = async (task: TaskProps) => {
-    addRecent(task._id);
     setSelectedTask(task);
 
     // 상세 팝업은 바로 띄우고 기록은 뒤이어 보낸다.

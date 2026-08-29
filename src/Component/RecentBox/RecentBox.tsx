@@ -1,10 +1,6 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { CalendarDays, StickyNote } from "lucide-react";
 import { MemoProps, RecentDoc, TaskProps } from "@/src/types/addTaskType";
-import useRecentMemoStore from "@/src/Hook/useHistoryHook";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -13,37 +9,25 @@ interface RecentBoxProps {
   memoList: MemoProps[];
 }
 
+// 정렬 기준값. lastViewedAt 이 없는 문서는 애초에 isRecent 가 false 라 목록에 오지 않는다.
+function viewedTime(doc: RecentDoc) {
+  return doc.lastViewedAt ? new Date(doc.lastViewedAt).getTime() : 0;
+}
+
 export default function RecentBox({ taskList, memoList }: RecentBoxProps) {
-  const recentIds = useRecentMemoStore((state) => state.recentIds);
-  const resetRecent = useRecentMemoStore((state) => state.resetRecent);
-
-  const [docs, setDocs] = useState<RecentDoc[]>([]);
-
-  useEffect(() => {
-    const docMap = new Map<string, RecentDoc>();
-    taskList.forEach((task) => docMap.set(task._id, { ...task, type: "task" }));
-    memoList.forEach((memo) => docMap.set(memo._id, { ...memo, type: "memo" }));
-
-    setDocs(
-      recentIds
-        .map((id) => docMap.get(id))
-        .filter((doc): doc is RecentDoc => Boolean(doc)),
-    );
-  }, [recentIds, taskList, memoList]);
+  // isRecent 는 서버가 lastViewedAt 을 기준으로 "최근 24시간 안에 봤는가"를 계산해 내려준 값이다.
+  // 시간이 지나면 서버 응답에서 알아서 빠지므로 클라이언트가 목록을 지울 필요가 없다.
+  const docs: RecentDoc[] = [
+    ...taskList.map((task) => ({ ...task, type: "task" as const })),
+    ...memoList.map((memo) => ({ ...memo, type: "memo" as const })),
+  ]
+    .filter((doc) => doc.isRecent)
+    .sort((a, b) => viewedTime(b) - viewedTime(a)); // 최근에 본 것부터
 
   return (
     <section className="max-w-10/12 m-auto mt-10 w-full">
       <header className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">최근 본 문서</h2>
-        {docs.length > 0 && (
-          <button
-            type="button"
-            onClick={resetRecent}
-            className="text-xs text-white/50 hover:text-white/80"
-          >
-            기록 지우기
-          </button>
-        )}
       </header>
 
       {docs.length === 0 ? (
