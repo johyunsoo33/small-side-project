@@ -4,6 +4,8 @@ import Image from "next/image";
 import { MouseEvent } from "react";
 import { X, Pin } from "lucide-react";
 import { TaskProps } from "@/src/types/addTaskType";
+import BookMarkBtn from "../../BookMark/BookMarkBtn";
+import { bookmarkTask } from "@/src/functions/CalenderTaskAdd";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -43,6 +45,11 @@ export default function TaskDetail({ task, onClose }: TaskDetailProps) {
             <p className="text-lg font-bold tracking-tight text-[#2B2620]">
               {task.title}
             </p>
+            <BookMarkBtn
+              id={task._id}
+              isBookmarked={task.isBookMarked ?? false}
+              onClick={bookmarkTask}
+            />
           </header>
 
           <main className="flex flex-col gap-4">
