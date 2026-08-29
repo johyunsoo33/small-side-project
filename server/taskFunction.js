@@ -49,18 +49,22 @@ const withIsRecent = (task) => {
 app.listen(PORT, () => {
   console.log(`서버가 ${PORT}번으로 시작하였습니다.`);
 });
+
 app.get("/api/tasks/get", async (req, res) => {
   const tasks = await find("Task");
   res.send(tasks.map(withIsRecent));
 });
+
 app.post("/api/tasks/post", async (req, res) => {
   const r = await insert("Task", req.body.param);
   res.send(r);
 });
+
 app.put("/api/tasks/put/:_id", async (req, res) => {
   const r = await update("Task", req.body.param, req.params._id);
   res.send(r);
 });
+
 // 일정 카드를 클릭했을 때 "마지막으로 본 시각"을 기록한다.
 // 시각은 클라이언트가 보낸 값이 아니라 서버 시계로 찍어야 기기마다 시간이 어긋나지 않는다.
 app.put("/api/tasks/view/:_id", async (req, res) => {
@@ -75,18 +79,7 @@ app.put("/api/tasks/view/:_id", async (req, res) => {
     res.status(400).send({ error: err.message });
   }
 });
-app.put("/api/tasks/view/:_id", async (req, res) => {
-  try {
-    const r = await update(
-      "Task",
-      { lastViewedAt: new Date() },
-      req.params._id,
-    );
-    res.send(r);
-  } catch (err) {
-    res.status(400).send({ error: err.message });
-  }
-});
+
 app.put("/api/tasks/bookmark/:_id", async (req, res) => {
   try {
     const r = await update("Task", { isBookmarked: true }, req.params._id);
@@ -95,6 +88,7 @@ app.put("/api/tasks/bookmark/:_id", async (req, res) => {
     res.status(400).send({ error: err.message });
   }
 });
+
 app.delete("/api/tasks/delete/:_id", async (req, res) => {
   const r = await deleteByID("Task", req.params._id);
   res.send(r);
@@ -105,6 +99,7 @@ app.get("/api/memos/get", async (req, res) => {
   const memos = await find("Memo");
   res.send(memos.map(withIsRecent));
 });
+
 app.post("/api/memos/post", upload.single("attachment"), async (req, res) => {
   try {
     const param = JSON.parse(req.body.param);
@@ -121,10 +116,12 @@ app.post("/api/memos/post", upload.single("attachment"), async (req, res) => {
     res.status(500).send({ error: err.message });
   }
 });
+
 app.put("/api/memos/put/:_id", async (req, res) => {
   const r = await update("Memo", req.body.param, req.params._id);
   res.send(r);
 });
+
 // 메모를 클릭했을 때 "마지막으로 본 시각"을 기록한다. 일정 쪽과 동작이 같다.
 app.put("/api/memos/view/:_id", async (req, res) => {
   try {
@@ -138,6 +135,7 @@ app.put("/api/memos/view/:_id", async (req, res) => {
     res.status(400).send({ error: err.message });
   }
 });
+
 app.put("/api/memos/bookmark/:_id", async (req, res) => {
   try {
     const r = await update("Memo", { isBookmarked: true }, req.params._id);
@@ -146,6 +144,7 @@ app.put("/api/memos/bookmark/:_id", async (req, res) => {
     res.status(400).send({ error: err.message });
   }
 });
+
 app.delete("/api/memos/delete/:_id", async (req, res) => {
   const r = await deleteByID("Memo", req.params._id);
   res.send(r);
