@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { TaskProps } from "@/src/types/addTaskType";
 import useRecentMemoStore from "@/src/Hook/useHistoryHook";
+import { markTaskViewed } from "@/src/functions/CalenderTaskAdd";
 import TaskDetail from "../TaskDetailBox/TaskDetailBox";
 
 export interface CalendarDate {
@@ -35,10 +37,19 @@ export default function TaskCalenderBox({
 }: TaskCalenderBoxProps & { taskList: TaskProps[] }) {
   const addRecent = useRecentMemoStore((state) => state.addRecent);
   const [selectedTask, setSelectedTask] = useState<TaskProps | null>(null);
+  const router = useRouter();
 
-  const openTaskDetail = (task: TaskProps) => {
+  const openTaskDetail = async (task: TaskProps) => {
     addRecent(task._id);
     setSelectedTask(task);
+
+    // 상세 팝업은 바로 띄우고 기록은 뒤이어 보낸다.
+    // 클릭할 때마다 보내야 24시간 창이 마지막으로 본 시점부터 다시 시작한다.
+    const res = await markTaskViewed(task._id);
+
+    // taskList 는 서버 컴포넌트에서 내려오므로, 서버가 새로 계산한 isRecent 를
+    // 받아오려면 서버 컴포넌트를 다시 그려야 한다. 클라이언트 state 는 유지된다.
+    if (res.ok) router.refresh();
   };
 
   return (
@@ -66,7 +77,10 @@ export default function TaskCalenderBox({
                   <div
                     key={task._id}
                     onClick={() => openTaskDetail(task)}
-                    className="truncate rounded bg-[#4F5DFF] px-1 text-xs text-white min-w-8/10 max-w-9/10 mx-auto cursor-pointer"
+                    // 최근 24시간 안에 본 일정은 테두리로 구분한다 (필요 없으면 ring 부분만 지우면 된다)
+                    className={`truncate rounded bg-[#4F5DFF] px-1 text-xs text-white min-w-8/10 max-w-9/10 mx-auto cursor-pointer ${
+                      task.isRecent ? "ring-1 ring-white/70" : ""
+                    }`}
                     title={task.title}
                   >
                     {task.title}
