@@ -79,7 +79,7 @@ app.delete("/api/tasks/delete/:_id", async (req, res) => {
 // 메모
 app.get("/api/memos/get", async (req, res) => {
   const memos = await find("Memo");
-  res.send(memos);
+  res.send(memos.map(withIsRecent));
 });
 app.post("/api/memos/post", upload.single("attachment"), async (req, res) => {
   try {
@@ -101,14 +101,24 @@ app.put("/api/memos/put/:_id", async (req, res) => {
   const r = await update("Memo", req.body.param, req.params._id);
   res.send(r);
 });
+// 메모를 클릭했을 때 "마지막으로 본 시각"을 기록한다. 일정 쪽과 동작이 같다.
+app.put("/api/memos/view/:_id", async (req, res) => {
+  try {
+    const r = await update("Memo", { lastViewedAt: new Date() }, req.params._id);
+    res.send(r);
+  } catch (err) {
+    res.status(400).send({ error: err.message });
+  }
+});
 app.delete("/api/memos/delete/:_id", async (req, res) => {
   const r = await deleteByID("Memo", req.params._id);
   res.send(r);
 });
 
 // 최근 본 문서
-// 최근 목록은 클라이언트가 sessionStorage 에 들고 있고, 카드 내용은
-// 기존 /api/tasks/get, /api/memos/get 응답에서 찾아 쓰므로 서버 조회가 필요 없다.
+// 최근 목록은 lastViewedAt 이 최근 24시간 안에 있는 문서를 뽑아 최신순으로 정렬한 것이다.
+// 그 판단(isRecent)은 위 GET 응답에서 이미 계산해 붙여주고 카드 내용도 같은 응답에 들어 있으므로
+// 최근 목록만을 위한 별도 조회 API 는 필요 없다.
 
 // 클라이언트가 컬렉션명을 직접 넘기지 못하도록 type 으로만 받아서 서버에서 매핑한다.
 // const COLLECTION_BY_TYPE = {
