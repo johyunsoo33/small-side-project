@@ -12,6 +12,7 @@ export interface TaskProps extends addTaskProps {
   // 최근 24시간 안에 봤는지 여부. DB에 저장된 값이 아니라 서버가 lastViewedAt 으로
   // 응답할 때마다 계산해서 내려주는 값이므로 클라이언트에서 직접 수정하지 않는다.
   isRecent?: boolean;
+  isBookMarked?: boolean;
 }
 export interface MemoAttachment {
   filename: string;
@@ -32,6 +33,7 @@ export interface MemoProps extends addMemoProps {
   // 일정과 동일하게 조회 시각만 저장하고 isRecent 는 서버가 계산해서 내려준다.
   lastViewedAt?: string;
   isRecent?: boolean;
+  isBookMarked?: boolean;
 }
 
 // 최근 본 문서 카드는 일정과 메모가 섞여 있다.
