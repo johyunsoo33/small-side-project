@@ -32,13 +32,26 @@ app.use(
 );
 const PORT = process.env.PORT || 4000;
 
+// 최근 조회로 인정하는 기간. 이 시간이 지나면 자동으로 isRecent 가 false 가 된다.
+const RECENT_WINDOW_MS = 24 * 60 * 60 * 1000; // 24시간
+
+// isRecent 는 DB에 저장하지 않고 lastViewedAt 으로부터 응답 시점에 계산한다.
+// 저장된 플래그를 주기적으로 지우는 방식과 달리 서버가 꺼져 있던 시간과 무관하게
+// "마지막으로 본 지 24시간이 지났는가" 가 항상 정확하게 계산된다.
+const withIsRecent = (task) => {
+  const viewedAt = task.lastViewedAt ? new Date(task.lastViewedAt) : null;
+  const isRecent =
+    viewedAt !== null && Date.now() - viewedAt.getTime() < RECENT_WINDOW_MS;
+  return { ...task, isRecent };
+};
+
 // 테스크
 app.listen(PORT, () => {
   console.log(`서버가 ${PORT}번으로 시작하였습니다.`);
 });
 app.get("/api/tasks/get", async (req, res) => {
   const tasks = await find("Task");
-  res.send(tasks);
+  res.send(tasks.map(withIsRecent));
 });
 app.post("/api/tasks/post", async (req, res) => {
   const r = await insert("Task", req.body.param);
@@ -47,6 +60,16 @@ app.post("/api/tasks/post", async (req, res) => {
 app.put("/api/tasks/put/:_id", async (req, res) => {
   const r = await update("Task", req.body.param, req.params._id);
   res.send(r);
+});
+// 일정 카드를 클릭했을 때 "마지막으로 본 시각"을 기록한다.
+// 시각은 클라이언트가 보낸 값이 아니라 서버 시계로 찍어야 기기마다 시간이 어긋나지 않는다.
+app.put("/api/tasks/view/:_id", async (req, res) => {
+  try {
+    const r = await update("Task", { lastViewedAt: new Date() }, req.params._id);
+    res.send(r);
+  } catch (err) {
+    res.status(400).send({ error: err.message });
+  }
 });
 app.delete("/api/tasks/delete/:_id", async (req, res) => {
   const r = await deleteByID("Task", req.params._id);
