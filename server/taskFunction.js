@@ -65,7 +65,31 @@ app.put("/api/tasks/put/:_id", async (req, res) => {
 // 시각은 클라이언트가 보낸 값이 아니라 서버 시계로 찍어야 기기마다 시간이 어긋나지 않는다.
 app.put("/api/tasks/view/:_id", async (req, res) => {
   try {
-    const r = await update("Task", { lastViewedAt: new Date() }, req.params._id);
+    const r = await update(
+      "Task",
+      { lastViewedAt: new Date() },
+      req.params._id,
+    );
+    res.send(r);
+  } catch (err) {
+    res.status(400).send({ error: err.message });
+  }
+});
+app.put("/api/tasks/view/:_id", async (req, res) => {
+  try {
+    const r = await update(
+      "Task",
+      { lastViewedAt: new Date() },
+      req.params._id,
+    );
+    res.send(r);
+  } catch (err) {
+    res.status(400).send({ error: err.message });
+  }
+});
+app.put("/api/tasks/bookmark/:_id", async (req, res) => {
+  try {
+    const r = await update("Task", { isBookmarked: true }, req.params._id);
     res.send(r);
   } catch (err) {
     res.status(400).send({ error: err.message });
@@ -104,7 +128,19 @@ app.put("/api/memos/put/:_id", async (req, res) => {
 // 메모를 클릭했을 때 "마지막으로 본 시각"을 기록한다. 일정 쪽과 동작이 같다.
 app.put("/api/memos/view/:_id", async (req, res) => {
   try {
-    const r = await update("Memo", { lastViewedAt: new Date() }, req.params._id);
+    const r = await update(
+      "Memo",
+      { lastViewedAt: new Date() },
+      req.params._id,
+    );
+    res.send(r);
+  } catch (err) {
+    res.status(400).send({ error: err.message });
+  }
+});
+app.put("/api/memos/bookmark/:_id", async (req, res) => {
+  try {
+    const r = await update("Memo", { isBookmarked: true }, req.params._id);
     res.send(r);
   } catch (err) {
     res.status(400).send({ error: err.message });
