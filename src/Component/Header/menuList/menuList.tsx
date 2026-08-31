@@ -45,17 +45,30 @@ export default function MenuList() {
       </div>
 
       {isOpen ? (
-        <ul className="flex justify-between mt-4">
-          <div className="flex">
-            <MenuItem content="일정" targetLink="mySchedule" />
-            <MenuItem content="메모" targetLink="myMemo" />
+        <ul className="flex justify-between mt-4 px-3 scale-up-ver-top">
+          <div className="flex gap-2">
+            <MenuItem
+              content="일정"
+              targetLink="mySchedule"
+              styleName="btn-3d-yellow rounded-xl min-w-[70px] text-center"
+            />
+            <MenuItem
+              content="메모"
+              targetLink="myMemo"
+              styleName="btn-3d-purple rounded-xl min-w-[70px] text-center"
+            />
           </div>
 
-          <div className="flex">
-            <MenuItem content="최근 문서" targetLink="recent" />
+          <div className="flex gap-2">
+            <MenuItem
+              content="최근 문서"
+              targetLink="recent"
+              styleName="btn-3d-green rounded-xl min-w-[70px] text-center"
+            />
             <MenuItem
               imagePath="/Icons/bookmarkIcon.svg"
               targetLink="importantSchedule"
+              styleName="btn-3d-yellow rounded-xl min-w-[50px] text-center"
             />
           </div>
         </ul>
