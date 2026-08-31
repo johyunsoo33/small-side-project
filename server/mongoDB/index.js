@@ -18,6 +18,14 @@ const find = async (collectionName, condition = {}) => {
   return r;
 };
 
+// _id 로 문서 하나를 조회한다. 저장 시 _id 가 ObjectId 라 문자열 조건으론 안 맞으므로 여기서 변환한다.
+const findByID = async (collectionName, _id) => {
+  const r = await mongoDB
+    .collection(collectionName)
+    .findOne({ _id: new ObjectId(_id) });
+  return r;
+};
+
 // // 여러 컬렉션을 한 번에 조회한다.
 // // _id 만으로는 어느 컬렉션에서 나온 문서인지 알 수 없으므로 출처를 함께 붙여서 반환한다.
 // const findMany = async (collectionNames, condition = {}) => {
@@ -66,6 +74,7 @@ const deleteByID = async (collectionName, _id) => {
 
 module.exports = {
   find,
+  findByID,
   insert,
   insertMany,
   update,

@@ -1,6 +1,6 @@
 const express = require("express");
 require("dotenv").config({ path: "./mongoDB/.env" });
-const { find, insert, update, deleteByID } = require("./mongoDB/index");
+const { find, findByID, insert, update, deleteByID } = require("./mongoDB/index");
 const cors = require("cors");
 const app = express();
 const multer = require("multer");
@@ -80,9 +80,16 @@ app.put("/api/tasks/view/:_id", async (req, res) => {
   }
 });
 
+// 현재 값을 읽어 반대로 뒤집는다. 클라이언트가 상태를 보내지 않아도
+// 같은 버튼으로 북마크/해제가 모두 처리된다. 필드명은 클라이언트와 맞춘 isBookMarked.
 app.put("/api/tasks/bookmark/:_id", async (req, res) => {
   try {
-    const r = await update("Task", { isBookmarked: true }, req.params._id);
+    const task = await findByID("Task", req.params._id);
+    const r = await update(
+      "Task",
+      { isBookMarked: !task?.isBookMarked },
+      req.params._id,
+    );
     res.send(r);
   } catch (err) {
     res.status(400).send({ error: err.message });
@@ -138,7 +145,12 @@ app.put("/api/memos/view/:_id", async (req, res) => {
 
 app.put("/api/memos/bookmark/:_id", async (req, res) => {
   try {
-    const r = await update("Memo", { isBookmarked: true }, req.params._id);
+    const memo = await findByID("Memo", req.params._id);
+    const r = await update(
+      "Memo",
+      { isBookMarked: !memo?.isBookMarked },
+      req.params._id,
+    );
     res.send(r);
   } catch (err) {
     res.status(400).send({ error: err.message });
