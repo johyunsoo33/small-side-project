@@ -17,6 +17,24 @@
   --color-flame-400: #c6531f;
   --color-flame-500: #a04014;
 
+  /* 3d 버튼 색상 변형. 400 은 버튼 면, 500 은 테두리와 눌리는 단면에 쓴다.
+     Tailwind 기본 팔레트(blue, pink, purple, lime ...)와 이름이 겹치면
+     bg-blue-400 같은 기존 유틸리티까지 덮어써 버리므로 고유한 이름을 쓴다. */
+  --color-azure-400: #7cc4f0;
+  --color-azure-500: #4a92c2;
+
+  --color-mint-400: #7fd8b0;
+  --color-mint-500: #4aa680;
+
+  --color-lemon-400: #f7d774;
+  --color-lemon-500: #c9a63c;
+
+  --color-lavender-400: #b9a5e3;
+  --color-lavender-500: #8a72bd;
+
+  --color-blossom-400: #f2a3c0;
+  --color-blossom-500: #c6708f;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -83,6 +101,104 @@ body {
       0 0 0 1px var(--color-flame-400) inset,
       0 6px 0 0 rgba(198, 83, 31, 0.7) inset,
       /* flame-200 with 0.7 opacity */ 0 0 0 1px rgba(0, 0, 0, 0.4);
+    transform: translateY(6px);
+  }
+
+  /* 아래는 .btn-3d-red 와 같은 구조로 색만 바꾼 밝은 변형들이다.
+     바탕이 밝으므로 글자색은 전부 진한 --color-button-color 를 쓴다. */
+
+  .btn-3d-blue {
+    background-color: var(--color-azure-400);
+    color: var(--color-button-color);
+    box-shadow:
+      0 0 0 1px var(--color-azure-500) inset,
+      0 6px 0 0 rgba(58, 116, 154, 0.7),
+      0 6px 0 1px rgba(0, 0, 0, 0.2),
+      0 6px 8px 1px rgba(0, 0, 0, 0.5);
+    @apply transition-all duration-100 ease-in-out cursor-pointer border-0 outline-none font-semibold;
+  }
+
+  .btn-3d-blue:active {
+    box-shadow:
+      0 0 0 1px var(--color-azure-400) inset,
+      0 6px 0 0 rgba(74, 146, 194, 0.7) inset,
+      0 0 0 1px rgba(0, 0, 0, 0.4);
+    transform: translateY(6px);
+  }
+
+  .btn-3d-green {
+    background-color: var(--color-mint-400);
+    color: var(--color-button-color);
+    box-shadow:
+      0 0 0 1px var(--color-mint-500) inset,
+      0 6px 0 0 rgba(48, 122, 94, 0.7),
+      0 6px 0 1px rgba(0, 0, 0, 0.2),
+      0 6px 8px 1px rgba(0, 0, 0, 0.5);
+    @apply transition-all duration-100 ease-in-out cursor-pointer border-0 outline-none font-semibold;
+  }
+
+  .btn-3d-green:active {
+    box-shadow:
+      0 0 0 1px var(--color-mint-400) inset,
+      0 6px 0 0 rgba(74, 166, 128, 0.7) inset,
+      0 0 0 1px rgba(0, 0, 0, 0.4);
+    transform: translateY(6px);
+  }
+
+  .btn-3d-yellow {
+    background-color: var(--color-lemon-400);
+    color: var(--color-button-color);
+    box-shadow:
+      0 0 0 1px var(--color-lemon-500) inset,
+      0 6px 0 0 rgba(154, 124, 38, 0.7),
+      0 6px 0 1px rgba(0, 0, 0, 0.2),
+      0 6px 8px 1px rgba(0, 0, 0, 0.5);
+    @apply transition-all duration-100 ease-in-out cursor-pointer border-0 outline-none font-semibold;
+  }
+
+  .btn-3d-yellow:active {
+    box-shadow:
+      0 0 0 1px var(--color-lemon-400) inset,
+      0 6px 0 0 rgba(201, 166, 60, 0.7) inset,
+      0 0 0 1px rgba(0, 0, 0, 0.4);
+    transform: translateY(6px);
+  }
+
+  .btn-3d-purple {
+    background-color: var(--color-lavender-400);
+    color: var(--color-button-color);
+    box-shadow:
+      0 0 0 1px var(--color-lavender-500) inset,
+      0 6px 0 0 rgba(105, 85, 148, 0.7),
+      0 6px 0 1px rgba(0, 0, 0, 0.2),
+      0 6px 8px 1px rgba(0, 0, 0, 0.5);
+    @apply transition-all duration-100 ease-in-out cursor-pointer border-0 outline-none font-semibold;
+  }
+
+  .btn-3d-purple:active {
+    box-shadow:
+      0 0 0 1px var(--color-lavender-400) inset,
+      0 6px 0 0 rgba(138, 114, 189, 0.7) inset,
+      0 0 0 1px rgba(0, 0, 0, 0.4);
+    transform: translateY(6px);
+  }
+
+  .btn-3d-pink {
+    background-color: var(--color-blossom-400);
+    color: var(--color-button-color);
+    box-shadow:
+      0 0 0 1px var(--color-blossom-500) inset,
+      0 6px 0 0 rgba(152, 84, 110, 0.7),
+      0 6px 0 1px rgba(0, 0, 0, 0.2),
+      0 6px 8px 1px rgba(0, 0, 0, 0.5);
+    @apply transition-all duration-100 ease-in-out cursor-pointer border-0 outline-none font-semibold;
+  }
+
+  .btn-3d-pink:active {
+    box-shadow:
+      0 0 0 1px var(--color-blossom-400) inset,
+      0 6px 0 0 rgba(198, 112, 143, 0.7) inset,
+      0 0 0 1px rgba(0, 0, 0, 0.4);
     transform: translateY(6px);
   }
 }
