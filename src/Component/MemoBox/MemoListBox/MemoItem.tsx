@@ -1,6 +1,7 @@
-import { deleteMemo } from "@/src/functions/CalenderTaskAdd";
+import { bookmarkMemo, deleteMemo } from "@/src/functions/CalenderTaskAdd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import BookMarkBtn from "../../BookMark/BookMarkBtn";
 interface MemoItemProps {
   imgSrc?: string;
   title: string;
@@ -10,6 +11,7 @@ interface MemoItemProps {
   _id: string;
   onClick?: () => void;
   onEdit?: () => void;
+  isBookMarked: boolean;
 }
 
 export default function MemoItem({
@@ -21,6 +23,7 @@ export default function MemoItem({
   _id,
   onClick,
   onEdit,
+  isBookMarked,
 }: MemoItemProps) {
   const router = useRouter();
 
@@ -35,6 +38,12 @@ export default function MemoItem({
   const modifyMemo = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onEdit?.();
+  };
+
+  // 북마크를 서버에 반영한 뒤 서버 컴포넌트를 새로 그려 최신 isBookMarked 를 받아온다.
+  const toggleBookmark = async (id: string) => {
+    await bookmarkMemo(id);
+    router.refresh();
   };
 
   return (
@@ -62,9 +71,14 @@ export default function MemoItem({
         <figcaption
           className={`row-start-1 font-semibold ${
             imgSrc ? "col-start-2" : "col-start-1"
-          }`}
+          } flex items-center gap-1`}
         >
           {title}
+          <BookMarkBtn
+            id={_id}
+            isBookmarked={isBookMarked}
+            onClick={toggleBookmark}
+          />
         </figcaption>
         <div
           className={`row-start-2 flex gap-2 text-xs text-white/55 ${

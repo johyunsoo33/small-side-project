@@ -42,6 +42,7 @@ export default function MemoList({ memoList }: { memoList: MemoProps[] }) {
             content={item.content}
             startAt={item.startDate}
             deadLineAt={item.endDate}
+            isBookMarked={item.isBookMarked ?? false}
           />
         ))}
       </ol>

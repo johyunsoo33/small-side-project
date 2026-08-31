@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { MouseEvent } from "react";
+import { useRouter } from "next/navigation";
 import { X, Pin } from "lucide-react";
 import { TaskProps } from "@/src/types/addTaskType";
 import BookMarkBtn from "../../BookMark/BookMarkBtn";
@@ -15,8 +16,16 @@ interface TaskDetailProps {
 }
 
 export default function TaskDetail({ task, onClose }: TaskDetailProps) {
+  const router = useRouter();
+
   const stopDetailClick = (event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+  };
+
+  // 북마크를 서버에 반영한 뒤 서버 컴포넌트를 새로 그려 최신 isBookMarked 를 받아온다.
+  const toggleBookmark = async (id: string) => {
+    await bookmarkTask(id);
+    router.refresh();
   };
 
   if (!task) return null;
@@ -48,7 +57,7 @@ export default function TaskDetail({ task, onClose }: TaskDetailProps) {
             <BookMarkBtn
               id={task._id}
               isBookmarked={task.isBookMarked ?? false}
-              onClick={bookmarkTask}
+              onClick={toggleBookmark}
             />
           </header>
 
