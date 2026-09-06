@@ -1,10 +1,10 @@
 "use client";
 import Image from "next/image";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent } from "react";
 
 interface BookMarkBtnProps {
   id: string;
-  isBookmarked: boolean; // ① 서버 값을 초기값으로
+  isBookmarked: boolean; // 서버 값을 그대로 그린다
   onClick: (id: string) => void;
 }
 export default function BookMarkBtn({
@@ -12,17 +12,10 @@ export default function BookMarkBtn({
   isBookmarked,
   onClick,
 }: BookMarkBtnProps) {
-  const [marked, setMarked] = useState(isBookmarked);
-
-  // 서버 값이 바뀌면(새로고침·router.refresh 후) 로컬 상태도 맞춘다.
-  // useState 초기값은 첫 렌더에서만 쓰이므로 이게 없으면 서버 값과 어긋난다.
-  useEffect(() => {
-    setMarked(isBookmarked);
-  }, [isBookmarked]);
-
+  // 서버 값을 로컬 state 로 복사해두면 값이 두 벌이 되어 계속 맞춰줘야 한다.
+  // 부모가 북마크 저장 후 router.refresh() 로 새 값을 내려주므로 prop 만 보면 된다.
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation(); // ② 카드 클릭까지 번지지 않게
-    setMarked(!marked); // 응답을 기다리지 않고 먼저 토글
+    event.stopPropagation(); // 카드 클릭까지 번지지 않게
     onClick(id);
   };
   return (
@@ -33,11 +26,11 @@ export default function BookMarkBtn({
     >
       <Image
         src={
-          marked
+          isBookmarked
             ? "/Icons/bookmark_click.svg"
             : "/Icons/bookmark_none_click.svg"
         }
-        alt={marked ? "북마크 클릭후" : "북마크 클릭전"}
+        alt={isBookmarked ? "북마크 클릭후" : "북마크 클릭전"}
         width={24}
         height={24}
         className="block"
