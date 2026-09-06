@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { MemoProps } from "@/src/types/addTaskType";
 import MemoItem from "./MemoItem";
-import MemoDetail from "../MemoDetailBox/MemoDetail";
+
 import MemoEditPopUp from "../MemoEditPopUp/MemoEditPopUp";
 import { markMemoViewed } from "@/src/functions/CalenderTaskAdd";
+import MemoDetail from "../MemoDetailBox/MemoDetail";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 

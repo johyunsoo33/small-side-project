@@ -1,5 +1,5 @@
 import Header from "@/src/Component/Header/header";
-import MemoBox from "@/src/Component/BookmarkBox/BookmarkBox";
+import MemoBox from "@/src/Component/MemoBox/MemoBox";
 import { getMemos } from "@/src/functions/CalenderTaskAdd";
 
 export default async function MyMemo() {
