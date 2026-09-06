@@ -36,15 +36,6 @@ export default function BookMarkItem({
 }: BookMarkItemProps) {
   const router = useRouter();
 
-  const deleteBtn = async (
-    event: React.MouseEvent<HTMLButtonElement>,
-    id: string,
-  ) => {
-    event.stopPropagation();
-    // 삭제가 끝나기 전에 refresh 하면 지워지기 전 목록을 다시 받는다
-    await (type === "task" ? deleteTasks(id) : deleteMemo(id));
-    router.refresh();
-  };
   const modifyMemo = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onEdit?.();
@@ -106,7 +97,7 @@ export default function BookMarkItem({
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </figure>
-      <div className=" flex flex-col gap-4 ml-4">
+      {/* <div className=" flex flex-col gap-4 ml-4">
         <button
           type="button"
           className="btn-3d-red font-basic xl:p-2 xl:pl-5 xl:pr-5 lg:p-2 lg:pl-4 lg:pr-4 md:p-1.5 md:pl-3 md:pr-3 sm:p-1.5 sm:pl-2 sm:pr-2 p-1 pl-1.5 pr-1.5 rounded-md xl:text-size-sm lg:text-sm md:text-xs sm:text-xs text-[10px] whitespace-nowrap"
@@ -121,7 +112,7 @@ export default function BookMarkItem({
         >
           수정
         </button>
-      </div>
+      </div> */}
     </li>
   );
 }
