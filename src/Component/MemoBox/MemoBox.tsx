@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import MemoList from "./MemoListBox/MemoList";
-import MemoPopUp from "./MemoPopUp/MemoPopUp";
-import MemoTopBox from "./MemoTopBox/MemoTopBox";
+import MemoList from "../MemoBox/MemoListBox/MemoList";
+import MemoPopUp from "../MemoBox/MemoPopUp/MemoPopUp";
+import MemoTopBox from "../MemoBox/MemoTopBox/MemoTopBox";
 import { MemoProps, TaskProps } from "@/src/types/addTaskType";
 
 export default function MemoBox({ memoList }: { memoList: MemoProps[] }) {

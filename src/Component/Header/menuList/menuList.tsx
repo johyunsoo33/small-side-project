@@ -30,7 +30,7 @@ export default function MenuList() {
   };
 
   return (
-    <div className="border-amber-600 border-1">
+    <div className="">
       <div className="relative w-6 h-6" id="menuIcon" onClick={handleClick}>
         <div
           ref={topLineRef}
@@ -45,8 +45,8 @@ export default function MenuList() {
       </div>
 
       {isOpen ? (
-        <ul className="flex justify-between mt-4 px-3 scale-up-ver-top">
-          <div className="flex gap-2">
+        <ul className="flex justify-between mt-4 px-3 py-3 menu-panel">
+          <div className="flex gap-2 slide-down-fade">
             <MenuItem
               content="일정"
               targetLink="mySchedule"
@@ -59,7 +59,7 @@ export default function MenuList() {
             />
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 slide-down-fade-late">
             <MenuItem
               content="최근 문서"
               targetLink="recent"
