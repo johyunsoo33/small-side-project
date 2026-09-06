@@ -50,6 +50,7 @@ export default function BookMarkList({
                 : undefined
             }
             _id={item._id}
+            type={item.type}
             title={item.title}
             content={item.content}
             startAt={item.startDate}
@@ -58,12 +59,12 @@ export default function BookMarkList({
           />
         ))}
       </ol>
-      {selectedMemo && (
+      {/* {selectedMemo && (
         <BookMarkDetail
           memo={selectedMemo}
           onClose={() => setSelectedMemo(null)}
         />
-      )}
+      )} */}
     </>
   );
 }

@@ -1,4 +1,9 @@
-import { bookmarkMemo, deleteMemo } from "@/src/functions/CalenderTaskAdd";
+import {
+  bookmarkMemo,
+  bookmarkTask,
+  deleteMemo,
+  deleteTasks,
+} from "@/src/functions/CalenderTaskAdd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import BookMarkBtn from "../../BookMark/BookMarkBtn";
@@ -9,6 +14,9 @@ interface BookMarkItemProps {
   startAt: string;
   deadLineAt: string;
   _id: string;
+  // 일정과 메모가 섞여 있으므로 어느 컬렉션의 문서인지 알아야
+  // 북마크·삭제를 맞는 API 로 보낼 수 있다.
+  type: "task" | "memo";
   onClick?: () => void;
   onEdit?: () => void;
   isBookMarked: boolean;
@@ -21,18 +29,20 @@ export default function BookMarkItem({
   startAt,
   deadLineAt,
   _id,
+  type,
   onClick,
   onEdit,
   isBookMarked,
 }: BookMarkItemProps) {
   const router = useRouter();
 
-  const deleteMemoBtn = (
+  const deleteBtn = async (
     event: React.MouseEvent<HTMLButtonElement>,
     id: string,
   ) => {
     event.stopPropagation();
-    deleteMemo(id);
+    // 삭제가 끝나기 전에 refresh 하면 지워지기 전 목록을 다시 받는다
+    await (type === "task" ? deleteTasks(id) : deleteMemo(id));
     router.refresh();
   };
   const modifyMemo = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,7 +52,7 @@ export default function BookMarkItem({
 
   // 북마크를 서버에 반영한 뒤 서버 컴포넌트를 새로 그려 최신 isBookMarked 를 받아온다.
   const toggleBookmark = async (id: string) => {
-    await bookmarkMemo(id);
+    await (type === "task" ? bookmarkTask(id) : bookmarkMemo(id));
     router.refresh();
   };
 
@@ -100,7 +110,7 @@ export default function BookMarkItem({
         <button
           type="button"
           className="btn-3d-red font-basic xl:p-2 xl:pl-5 xl:pr-5 lg:p-2 lg:pl-4 lg:pr-4 md:p-1.5 md:pl-3 md:pr-3 sm:p-1.5 sm:pl-2 sm:pr-2 p-1 pl-1.5 pr-1.5 rounded-md xl:text-size-sm lg:text-sm md:text-xs sm:text-xs text-[10px] whitespace-nowrap"
-          onClick={(event) => deleteMemoBtn(event, _id)}
+          onClick={(event) => deleteBtn(event, _id)}
         >
           삭제
         </button>
