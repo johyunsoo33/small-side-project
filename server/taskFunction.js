@@ -162,6 +162,122 @@ app.delete("/api/memos/delete/:_id", async (req, res) => {
   res.send(r);
 });
 
+// 카카오
+// 카카오 토큰 서버에 요청을 보낸다. 최초 발급(authorization_code)과 갱신(refresh_token) 둘 다 이 함수를 쓴다.
+async function requestKakaoToken(params) {
+  const body = new URLSearchParams({
+    client_id: process.env.KAKAO_REST_API_KEY,
+    ...params,
+  });
+  // 콘솔에서 Client Secret을 켠 경우에만 필요하다.
+  if (process.env.KAKAO_CLIENT_SECRET) {
+    body.set("client_secret", process.env.KAKAO_CLIENT_SECRET);
+  }
+
+  const kakaoRes = await fetch("https://kauth.kakao.com/oauth/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
+  });
+  const token = await kakaoRes.json();
+  if (token.error) {
+    throw new Error(token.error_description);
+  }
+  return token;
+}
+
+// 저장된 access_token 을 돌려준다. 만료가 가까우면 refresh_token 으로 갱신한 뒤 돌려준다.
+// 카카오톡을 보내는 쪽은 토큰 만료를 신경 쓰지 않고 이 함수만 호출하면 된다.
+async function getValidAccessToken() {
+  const [saved] = await find("KakaoToken");
+  if (!saved) {
+    throw new Error("카카오 로그인이 필요합니다");
+  }
+
+  // 딱 맞춰 쓰다가 요청 도중 만료되는 걸 피하려고 5분 여유를 둔다.
+  const marginMs = 5 * 60 * 1000;
+  if (Date.now() < new Date(saved.accessExpiresAt).getTime() - marginMs) {
+    return saved.accessToken;
+  }
+
+  if (Date.now() >= new Date(saved.refreshExpiresAt).getTime()) {
+    throw new Error("refresh_token 이 만료되었습니다. 다시 로그인해야 합니다");
+  }
+
+  const token = await requestKakaoToken({
+    grant_type: "refresh_token",
+    refresh_token: saved.refreshToken,
+  });
+
+  const now = Date.now();
+  const updated = {
+    accessToken: token.access_token,
+    accessExpiresAt: new Date(now + token.expires_in * 1000),
+  };
+  // refresh_token 은 만료 1달 이내일 때만 새 값이 내려온다. 없으면 기존 것을 계속 쓴다.
+  if (token.refresh_token) {
+    updated.refreshToken = token.refresh_token;
+    updated.refreshExpiresAt = new Date(
+      now + token.refresh_token_expires_in * 1000,
+    );
+  }
+  await update("KakaoToken", updated, saved._id);
+
+  return updated.accessToken;
+}
+
+// 프론트가 리다이렉트로 받은 인가 코드를 넘기면 여기서 토큰으로 교환한다.
+// 토큰은 브라우저로 돌려주지 않고 DB에만 둔다. 나중에 서버가 직접 카카오톡을 보낼 때 쓴다.
+app.post("/api/kakao/token", async (req, res) => {
+  try {
+    const { code } = req.body;
+    if (!code) {
+      return res.status(400).send({ error: "code가 없습니다" });
+    }
+
+    const token = await requestKakaoToken({
+      grant_type: "authorization_code",
+      redirect_uri: process.env.KAKAO_REDIRECT_URI,
+      code,
+    });
+
+    const now = Date.now();
+    const tokenDoc = {
+      accessToken: token.access_token,
+      refreshToken: token.refresh_token,
+      accessExpiresAt: new Date(now + token.expires_in * 1000),
+      refreshExpiresAt: new Date(now + token.refresh_token_expires_in * 1000),
+    };
+
+    // 개인용이라 토큰 문서는 하나만 유지한다.
+    const existing = await find("KakaoToken");
+    if (existing.length > 0) {
+      await update("KakaoToken", tokenDoc, existing[0]._id);
+    } else {
+      await insert("KakaoToken", tokenDoc);
+    }
+
+    res.send({ ok: true });
+  } catch (err) {
+    res.status(500).send({ error: err.message });
+  }
+});
+
+// 연동 상태 확인용. 만료됐으면 갱신까지 시도한 뒤 결과를 알려준다.
+app.get("/api/kakao/status", async (req, res) => {
+  try {
+    await getValidAccessToken();
+    const [saved] = await find("KakaoToken");
+    res.send({
+      connected: true,
+      accessExpiresAt: saved.accessExpiresAt,
+      refreshExpiresAt: saved.refreshExpiresAt,
+    });
+  } catch (err) {
+    res.send({ connected: false, error: err.message });
+  }
+});
+
 // 최근 본 문서
 // 최근 목록은 lastViewedAt 이 최근 24시간 안에 있는 문서를 뽑아 최신순으로 정렬한 것이다.
 // 그 판단(isRecent)은 위 GET 응답에서 이미 계산해 붙여주고 카드 내용도 같은 응답에 들어 있으므로
