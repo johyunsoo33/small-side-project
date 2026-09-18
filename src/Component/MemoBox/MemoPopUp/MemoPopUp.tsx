@@ -15,6 +15,7 @@ interface MemoPopUpProps {
   popUpStatus: boolean;
 }
 
+// [메모] 메모 추가 팝업
 export default function MemoPopUp({
   closePopUpFunction,
   popUpStatus,

@@ -16,6 +16,7 @@ interface MemoEditPopUpProps {
   onClose: () => void;
 }
 
+// [메모] 메모 수정 팝업
 export default function MemoEditPopUp({ memo, onClose }: MemoEditPopUpProps) {
   const MemoAddContentArea = (event: ChangeEvent<HTMLTextAreaElement>) => {
     event.target.style.height = "auto";

@@ -3,6 +3,7 @@ interface MemoTopBoxProps {
   createFunction: () => void;
 }
 
+// [메모] 목록 위쪽의 메모 추가 버튼 줄
 export default function MemoTopBox({ createFunction }: MemoTopBoxProps) {
   return (
     <div className="taskTopBox max-w-11/12 mt-10 ">

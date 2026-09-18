@@ -12,6 +12,7 @@ interface MemoDetailProps {
   onClose: () => void;
 }
 
+// [메모] 메모 상세 팝업
 export default function MemoDetail({ memo, onClose }: MemoDetailProps) {
   const stopDetailClick = (event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();

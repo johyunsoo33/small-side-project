@@ -14,6 +14,7 @@ interface MemoItemProps {
   isBookMarked: boolean;
 }
 
+// [메모] 메모 목록의 카드 하나. 북마크·삭제·수정 버튼을 갖는다.
 export default function MemoItem({
   imgSrc,
   title,
@@ -35,12 +36,13 @@ export default function MemoItem({
     deleteMemo(id);
     router.refresh();
   };
+
   const modifyMemo = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onEdit?.();
   };
 
-  // 북마크를 서버에 반영한 뒤 서버 컴포넌트를 새로 그려 최신 isBookMarked 를 받아온다.
+  // 서버에 반영한 뒤 새로 그려 최신 isBookMarked 를 받아온다
   const toggleBookmark = async (id: string) => {
     await bookmarkMemo(id);
     router.refresh();

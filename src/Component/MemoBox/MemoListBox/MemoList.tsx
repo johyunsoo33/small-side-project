@@ -11,17 +11,16 @@ import MemoDetail from "../MemoDetailBox/MemoDetail";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// [메모] 메모 목록. 카드 클릭 시 상세를, 수정 버튼 클릭 시 수정 팝업을 띄운다.
 export default function MemoList({ memoList }: { memoList: MemoProps[] }) {
   const [selectedMemo, setSelectedMemo] = useState<MemoProps | null>(null);
   const [editingMemo, setEditingMemo] = useState<MemoProps | null>(null);
   const router = useRouter();
 
+  // 상세를 띄우고 조회 시각을 서버에 기록한다 (최근 본 문서 목록에 반영)
   const openMemoDetail = async (memo: MemoProps) => {
     setSelectedMemo(memo);
-
-    // 상세는 바로 띄우고 조회 시각은 뒤이어 서버에 기록한다.
     const res = await markMemoViewed(memo._id);
-    // 서버가 다시 계산한 isRecent / lastViewedAt 을 받아오기 위해 서버 컴포넌트를 새로 그린다
     if (res.ok) router.refresh();
   };
 
