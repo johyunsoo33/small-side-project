@@ -21,7 +21,7 @@ export default function TaskTopBox({
 }: TaskTopBoxProps) {
   return (
     <>
-      <div className="taskTopBox flex justify-between max-w-11/12 mt-4 m-auto">
+      <div className="taskTopBox flex justify-between max-w-[100rem] mt-4 m-auto">
         <div className="taskControl">
           <button onClick={prevMonth} title="이전 달로 이동">
             <Image
