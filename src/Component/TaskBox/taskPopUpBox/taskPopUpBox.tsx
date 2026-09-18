@@ -16,6 +16,7 @@ interface TaskPopUpProps {
   selectedDate?: Date;
 }
 
+// [일정] 일정 추가 팝업
 export default function TaskPopUpBox({
   closePopUpFunction,
   popUpStatus,

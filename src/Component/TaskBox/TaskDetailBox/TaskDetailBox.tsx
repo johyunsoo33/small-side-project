@@ -15,6 +15,7 @@ interface TaskDetailProps {
   onClose: () => void;
 }
 
+// [일정] 일정 상세 팝업
 export default function TaskDetail({ task, onClose }: TaskDetailProps) {
   const router = useRouter();
 
@@ -22,7 +23,7 @@ export default function TaskDetail({ task, onClose }: TaskDetailProps) {
     event.stopPropagation();
   };
 
-  // 북마크를 서버에 반영한 뒤 서버 컴포넌트를 새로 그려 최신 isBookMarked 를 받아온다.
+  // 서버에 반영한 뒤 새로 그려 최신 isBookMarked 를 받아온다
   const toggleBookmark = async (id: string) => {
     await bookmarkTask(id);
     router.refresh();

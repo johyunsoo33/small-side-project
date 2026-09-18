@@ -13,6 +13,7 @@ interface TaskPopUpDeleteProps {
   taskList: TaskProps[];
 }
 
+// 시작일~마감일을 "9월 3일 ~ 9월 5일" 형태로 만든다 (같은 날이면 하나만)
 const formatDateRange = (start?: string, end?: string) => {
   if (!start && !end) return null;
   const fmt = (d: string) =>
@@ -23,6 +24,7 @@ const formatDateRange = (start?: string, end?: string) => {
   return sameDay ? fmt(start) : `${fmt(start)} ~ ${fmt(end)}`;
 };
 
+// [일정] 일정 삭제 팝업. 목록에서 하나씩 지운다.
 export default function TaskPopUpDeleteBox({
   closePopUpFunction,
   popUpStatus,

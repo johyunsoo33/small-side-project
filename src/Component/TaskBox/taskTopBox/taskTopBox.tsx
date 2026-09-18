@@ -10,6 +10,7 @@ interface TaskTopBoxProps {
   month: number;
 }
 
+// [일정] 달력 위쪽 줄. 월 이동과 일정 추가·삭제 버튼.
 export default function TaskTopBox({
   createTask,
   prevMonth,

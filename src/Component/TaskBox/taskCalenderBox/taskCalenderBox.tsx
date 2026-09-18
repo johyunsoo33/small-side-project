@@ -17,12 +17,12 @@ interface TaskCalenderBoxProps {
   calendar: CalendarDate[];
 }
 
-// Date를 "YYYY-MM-DD" 문자열로 변환 (task.startDate/endDate와 같은 포맷으로 맞춰서 비교하기 위함)
+// Date 를 "YYYY-MM-DD" 로 변환
 function toDateKey(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
-// 문자열 비교로 startDate <= 셀 날짜 <= endDate 범위에 포함되는 태스크만 걸러냄 (YYYY-MM-DD는 사전순 정렬이 날짜순 정렬과 같아서 문자열 비교가 가능)
+// 해당 날짜 칸에 걸치는 일정만 걸러낸다 (YYYY-MM-DD 는 사전순 = 날짜순이라 문자열 비교로 충분)
 function getTasksForDate(taskList: TaskProps[], date: Date) {
   const dateKey = toDateKey(date);
   return taskList.filter(
@@ -30,6 +30,7 @@ function getTasksForDate(taskList: TaskProps[], date: Date) {
   );
 }
 
+// [일정] 달력 본체. 날짜 칸에 일정을 뿌리고 클릭하면 상세를 띄운다.
 export default function TaskCalenderBox({
   calendar,
   taskList,
@@ -37,15 +38,10 @@ export default function TaskCalenderBox({
   const [selectedTask, setSelectedTask] = useState<TaskProps | null>(null);
   const router = useRouter();
 
+  // 상세를 띄우고 조회 시각을 서버에 기록한다 (최근 본 문서 목록에 반영)
   const openTaskDetail = async (task: TaskProps) => {
     setSelectedTask(task);
-
-    // 상세 팝업은 바로 띄우고 기록은 뒤이어 보낸다.
-    // 클릭할 때마다 보내야 24시간 창이 마지막으로 본 시점부터 다시 시작한다.
     const res = await markTaskViewed(task._id);
-
-    // taskList 는 서버 컴포넌트에서 내려오므로, 서버가 새로 계산한 isRecent 를
-    // 받아오려면 서버 컴포넌트를 다시 그려야 한다. 클라이언트 state 는 유지된다.
     if (res.ok) router.refresh();
   };
 
@@ -74,7 +70,7 @@ export default function TaskCalenderBox({
                   <div
                     key={task._id}
                     onClick={() => openTaskDetail(task)}
-                    // 최근 24시간 안에 본 일정은 테두리로 구분한다 (필요 없으면 ring 부분만 지우면 된다)
+                    // 최근 본 일정은 테두리로 구분한다
                     className={`truncate rounded bg-[#4F5DFF] px-1 text-xs text-white min-w-8/10 max-w-9/10 mx-auto cursor-pointer ${
                       task.isRecent ? "ring-1 ring-white/70" : ""
                     }`}

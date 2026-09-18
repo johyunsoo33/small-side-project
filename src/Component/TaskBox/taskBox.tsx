@@ -8,6 +8,7 @@ import TaskPopUpBox from "./taskPopUpBox/taskPopUpBox";
 import TaskPopUpDeleteBox from "./taskPopUpBox/taskPopUpDeleteBox";
 import { TaskProps } from "@/src/types/addTaskType";
 
+// [일정] 일정 페이지의 최상위 박스. 달력 6주(42칸)를 만들고 팝업들을 묶는다.
 export default function TaskBox({ taskList }: { taskList: TaskProps[] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [open, setOpen] = useState(false);
@@ -16,13 +17,13 @@ export default function TaskBox({ taskList }: { taskList: TaskProps[] }) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  const firstDay = new Date(year, month, 1); // 해당 달의 첫 번째 날짜 객체 생성
-  const lastDay = new Date(year, month + 1, 0); // 해당 달의 마지막 날짜 객체 생성 (다음 달의 0번째 날짜는 현재 달의 마지막 날짜)
-  const prevLastDay = new Date(year, month, 0); // 이전 달의 마지막 날짜 객체 생성 (현재 달의 0번째 날짜는 이전 달의 마지막 날짜)
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0); // 다음 달의 0일 = 이번 달 마지막 날
+  const prevLastDay = new Date(year, month, 0); // 이번 달의 0일 = 전달 마지막 날
 
-  const startDayOfWeek = firstDay.getDay(); // 해당 달의 첫 번째 날짜가 무슨 요일인지
-  const totalDays = lastDay.getDate(); // 이달 총 일수
-  const prevMonthTotalDays = prevLastDay.getDate(); // 전달 총 일수
+  const startDayOfWeek = firstDay.getDay();
+  const totalDays = lastDay.getDate();
+  const prevMonthTotalDays = prevLastDay.getDate();
 
   const calendar: CalendarDate[] = [];
 
