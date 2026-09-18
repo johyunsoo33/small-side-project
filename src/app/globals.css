@@ -64,35 +64,34 @@ body {
   height: 5rem;
 }
 
-/* 메뉴가 열릴 때 항목이 살짝 내려오면서 나타난다.
-   scaleY 로 하면 버튼과 3d 그림자가 눌렸다 펴지면서 일그러지므로
-   모양이 변하지 않는 translateY 를 쓴다. */
-@keyframes slide-down-fade {
+/* 메뉴가 왼쪽에 세로로 열리므로 항목도 왼쪽에서 밀려 들어온다.
+   scaleX 로 하면 버튼과 3d 그림자가 눌렸다 펴지면서 일그러지므로
+   모양이 변하지 않는 translateX 를 쓴다.
+   등장 순서(지연)는 항목마다 달라야 해서 여기 두지 않고
+   MenuList 가 animationDelay 로 하나씩 넣어준다. */
+@keyframes slide-in-left {
   0% {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateX(-12px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
-.slide-down-fade {
-  animation: slide-down-fade 0.2s ease-out both;
-}
-
-/* 두 그룹이 한 덩어리로 움직이지 않도록 오른쪽 그룹만 살짝 늦게 시작한다 */
-.slide-down-fade-late {
-  animation: slide-down-fade 0.2s ease-out 0.06s both;
+.slide-in-left {
+  animation: slide-in-left 0.2s ease-out both;
 }
 
 /* 열린 메뉴가 페이지 내용과 구분되도록 옅은 붉은 경계선을 준다.
    첫 줄의 0 0 0 1px 은 퍼짐만 있는 그림자라 1px 테두리처럼 보이면서
    border 와 달리 레이아웃(크기)에 영향을 주지 않는다.
-   색은 btn-3d-red 와 맞추려고 flame 계열을 썼다. */
+   색은 btn-3d-red 와 맞추려고 flame 계열을 썼다.
+   배경색이 필요한 이유: 패널이 본문 위에 떠 있어서 비워두면 글이 비쳐 보인다. */
 .menu-panel {
   border-radius: 0.75rem;
+  background: var(--card);
   box-shadow:
     0 0 0 1px rgba(198, 83, 31, 0.35),
     0 4px 14px -4px rgba(160, 64, 20, 0.35);
