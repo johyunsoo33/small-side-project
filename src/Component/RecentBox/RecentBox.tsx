@@ -9,11 +9,12 @@ interface RecentBoxProps {
   memoList: MemoProps[];
 }
 
-// 정렬 기준값. lastViewedAt 이 없는 문서는 애초에 isRecent 가 false 라 목록에 오지 않는다.
+// 정렬 기준값
 function viewedTime(doc: RecentDoc) {
   return doc.lastViewedAt ? new Date(doc.lastViewedAt).getTime() : 0;
 }
 
+// [최근] 최근 24시간 안에 본 일정·메모를 모아 카드로 보여준다
 export default function RecentBox({ taskList, memoList }: RecentBoxProps) {
   const docs: RecentDoc[] = [
     ...taskList.map((task) => ({ ...task, type: "task" as const })),
