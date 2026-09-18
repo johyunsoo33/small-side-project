@@ -4,10 +4,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import KakaoButton from "../KakaoBtn/KakaoButton";
 import { kakaoLoginComplete } from "@/src/functions/kakao_login";
 
+// [카카오] 로그인 버튼을 띄우고, 리다이렉트로 돌아온 code 를 서버에 넘겨 연동을 마무리한다
 export default function LoginBox() {
   const code = useSearchParams().get("code");
   const router = useRouter();
-  // 인가 코드는 1회용이라 두 번 보내면 실패한다. 개발 모드에서 effect 가 두 번 도는 걸 막는다.
+  // 인가 코드는 1회용이라 두 번 보내면 실패한다
   const hasRun = useRef(false);
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
