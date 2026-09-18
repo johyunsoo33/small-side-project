@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
+// [최근] 최근 본 메모 id 를 sessionStorage 에 최대 10개까지 보관하는 스토어
 interface RecentMemoState {
   recentIds: string[];
   addRecent: (id: string) => void;

@@ -3,8 +3,9 @@ import { MemoProps, TaskProps } from "../types/addTaskType";
 import { ApiRes, ApiResPromise } from "../types/api";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// 달력
+// ===== 일정 =====
 
+// [일정] 목록 조회
 export async function getTasks() {
   try {
     const res = await axios.get<TaskProps[]>(`${API_URL}/api/tasks/get`);
@@ -19,6 +20,7 @@ export async function getTasks() {
   }
 }
 
+// [일정] 생성 (useActionState 용 폼 액션)
 export async function calenderAddTask(
   state: ApiRes<TaskProps> | null,
   formData: FormData,
@@ -30,7 +32,6 @@ export async function calenderAddTask(
         content: formData.get("content") as string,
         startDate: formData.get("startDate") as string,
         endDate: formData.get("endDate") as string,
-        // lastViewedAt 은 저장하지 않는다. 값이 없으면 서버가 isRecent: false 로 계산한다.
       },
     });
     console.log("res", res);
@@ -45,9 +46,7 @@ export async function calenderAddTask(
   }
 }
 
-// 일정 카드를 클릭했을 때 "마지막으로 본 시각"을 서버에 기록한다.
-// 기록 시각은 서버가 직접 찍으므로 body 로 보낼 값이 없다.
-// isRecent 는 이 시각을 기준으로 조회할 때마다 계산되며, 24시간이 지나면 자동으로 false 가 된다.
+// [일정] 조회 시각 기록 (최근 본 문서용)
 export async function markTaskViewed(id: string): ApiResPromise<TaskProps> {
   try {
     const res = await axios.put<TaskProps>(`${API_URL}/api/tasks/view/${id}`);
@@ -62,6 +61,7 @@ export async function markTaskViewed(id: string): ApiResPromise<TaskProps> {
   }
 }
 
+// [일정] 북마크 토글
 export async function bookmarkTask(id: string): ApiResPromise<MemoProps> {
   try {
     const res = await axios.put<TaskProps>(
@@ -78,6 +78,7 @@ export async function bookmarkTask(id: string): ApiResPromise<MemoProps> {
   }
 }
 
+// [일정] 삭제
 export async function deleteTasks(id: string): ApiResPromise<TaskProps> {
   try {
     const res = await axios.delete<TaskProps>(
@@ -94,8 +95,9 @@ export async function deleteTasks(id: string): ApiResPromise<TaskProps> {
   }
 }
 
-// 메모
+// ===== 메모 =====
 
+// [메모] 목록 조회
 export async function getMemos() {
   try {
     const res = await axios.get<MemoProps[]>(`${API_URL}/api/memos/get`);
@@ -110,6 +112,7 @@ export async function getMemos() {
   }
 }
 
+// [메모] 생성 (첨부파일 포함, useActionState 용 폼 액션)
 export async function AddMemo(
   state: ApiRes<MemoProps> | null,
   formData: FormData,
@@ -146,76 +149,7 @@ export async function AddMemo(
   }
 }
 
-// 최근 본 문서
-// 최근 목록은 getTasks / getMemos 결과에서 골라내므로 전용 조회 함수가 필요 없다.
-//
-// 참고: 서버에 (type, _id) 목록을 보내 조회하던 버전.
-//
-// export async function getRecentDocs(refs: RecentRef[]) {
-//   if (refs.length === 0) {
-//     return { ok: 1, message: "최근 본 문서가 없습니다", item: [] as RecentDoc[] };
-//   }
-//   try {
-//     const res = await axios.post<RecentDoc[]>(`${API_URL}/api/recent/post`, {
-//       param: refs,
-//     });
-//     return {
-//       ok: 1,
-//       message: "최근 본 문서를 불러왔습니다",
-//       item: res.data,
-//     };
-//   } catch (error) {
-//     console.log("error", error);
-//     return { ok: 0, message: "최근 본 문서를 불러오지 못했습니다" };
-//   }
-// }
-
-// 메모를 클릭했을 때 "마지막으로 본 시각"을 기록한다. markTaskViewed 와 동작이 같다.
-export async function markMemoViewed(id: string): ApiResPromise<MemoProps> {
-  try {
-    const res = await axios.put<MemoProps>(`${API_URL}/api/memos/view/${id}`);
-    return {
-      ok: 1,
-      message: "최근 조회 시각을 기록했습니다",
-      item: res.data,
-    };
-  } catch (error) {
-    console.log("error", error);
-    return { ok: 0, message: "최근 조회 시각을 기록하지 못했습니다" };
-  }
-}
-
-export async function bookmarkMemo(id: string): ApiResPromise<MemoProps> {
-  try {
-    const res = await axios.put<MemoProps>(
-      `${API_URL}/api/memos/bookmark/${id}`,
-    );
-    return {
-      ok: 1,
-      message: "메모를 북마크했습니다",
-      item: res.data,
-    };
-  } catch (error) {
-    console.log("error", error);
-    return { ok: 0, message: "메모를 북마크하지 못했습니다" };
-  }
-}
-
-export async function deleteMemo(id: string): ApiResPromise<MemoProps> {
-  try {
-    const res = await axios.delete<MemoProps>(
-      `${API_URL}/api/memos/delete/${id}`,
-    );
-    return {
-      ok: 1,
-      message: "메모를 삭제하였습니다",
-      item: res.data,
-    };
-  } catch (error) {
-    console.log("error", error);
-    return { ok: 0, message: "메모를 삭제하는데 실패하였습니다" };
-  }
-}
+// [메모] 수정 (useActionState 용 폼 액션)
 export async function EditMemo(
   state: ApiRes<MemoProps> | null,
   formData: FormData,
@@ -249,5 +183,54 @@ export async function EditMemo(
   } catch (error) {
     console.log("error", error);
     return { ok: 0, message: "메모를 수정하는데 실패 하였습니다" };
+  }
+}
+
+// [메모] 조회 시각 기록 (최근 본 문서용)
+export async function markMemoViewed(id: string): ApiResPromise<MemoProps> {
+  try {
+    const res = await axios.put<MemoProps>(`${API_URL}/api/memos/view/${id}`);
+    return {
+      ok: 1,
+      message: "최근 조회 시각을 기록했습니다",
+      item: res.data,
+    };
+  } catch (error) {
+    console.log("error", error);
+    return { ok: 0, message: "최근 조회 시각을 기록하지 못했습니다" };
+  }
+}
+
+// [메모] 북마크 토글
+export async function bookmarkMemo(id: string): ApiResPromise<MemoProps> {
+  try {
+    const res = await axios.put<MemoProps>(
+      `${API_URL}/api/memos/bookmark/${id}`,
+    );
+    return {
+      ok: 1,
+      message: "메모를 북마크했습니다",
+      item: res.data,
+    };
+  } catch (error) {
+    console.log("error", error);
+    return { ok: 0, message: "메모를 북마크하지 못했습니다" };
+  }
+}
+
+// [메모] 삭제
+export async function deleteMemo(id: string): ApiResPromise<MemoProps> {
+  try {
+    const res = await axios.delete<MemoProps>(
+      `${API_URL}/api/memos/delete/${id}`,
+    );
+    return {
+      ok: 1,
+      message: "메모를 삭제하였습니다",
+      item: res.data,
+    };
+  } catch (error) {
+    console.log("error", error);
+    return { ok: 0, message: "메모를 삭제하는데 실패하였습니다" };
   }
 }

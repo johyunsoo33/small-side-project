@@ -1,3 +1,4 @@
+// 일정 생성 시 입력받는 필드
 export interface addTaskProps {
   title: string;
   content: string;
@@ -5,21 +6,23 @@ export interface addTaskProps {
   endDate: string;
 }
 
+// 서버에서 내려오는 일정 문서
 export interface TaskProps extends addTaskProps {
   _id: string;
-  // 마지막으로 카드를 클릭한 시각(ISO 문자열). 서버 시계로 기록되며, 한 번도 안 봤으면 없다.
   lastViewedAt?: string;
-  // 최근 24시간 안에 봤는지 여부. DB에 저장된 값이 아니라 서버가 lastViewedAt 으로
-  // 응답할 때마다 계산해서 내려주는 값이므로 클라이언트에서 직접 수정하지 않는다.
+  // 서버가 lastViewedAt 으로 계산해 내려주는 값. 클라이언트에서 직접 수정하지 않는다.
   isRecent?: boolean;
   isBookMarked?: boolean;
 }
+
+// 메모 첨부파일
 export interface MemoAttachment {
   filename: string;
   originalname: string;
   path: string;
 }
 
+// 메모 생성 시 입력받는 필드
 export interface addMemoProps {
   attachment?: MemoAttachment;
   title: string;
@@ -28,24 +31,15 @@ export interface addMemoProps {
   endDate: string;
 }
 
+// 서버에서 내려오는 메모 문서
 export interface MemoProps extends addMemoProps {
   _id: string;
-  // 일정과 동일하게 조회 시각만 저장하고 isRecent 는 서버가 계산해서 내려준다.
   lastViewedAt?: string;
   isRecent?: boolean;
   isBookMarked?: boolean;
 }
 
-// 최근 본 문서 카드는 일정과 메모가 섞여 있다.
-// type 으로 판별해야 메모에만 있는 attachment 를 안전하게 다룰 수 있다.
+// 최근/북마크 목록은 일정과 메모가 섞여 있어 type 으로 구분한다
 export type RecentDoc =
   | (TaskProps & { type: "task" })
   | (MemoProps & { type: "memo" });
-
-// 참고: 최근 목록을 (type, _id) 복합키로 저장하던 시절의 타입.
-// export type DocType = "task" | "memo";
-//
-// export interface RecentRef {
-//   type: DocType;
-//   _id: string;
-// }
