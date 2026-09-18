@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import LoginBox from "@/src/Component/KakaoLoginBox/LoginBox";
 
+// [페이지] 카카오 로그인 (/login)
 export default function Login() {
   return (
     <>
