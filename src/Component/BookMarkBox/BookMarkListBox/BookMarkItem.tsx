@@ -1,12 +1,8 @@
-import {
-  bookmarkMemo,
-  bookmarkTask,
-  deleteMemo,
-  deleteTasks,
-} from "@/src/functions/CalenderTaskAdd";
+import { bookmarkMemo, bookmarkTask } from "@/src/functions/CalenderTaskAdd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import BookMarkBtn from "../../BookMark/BookMarkBtn";
+
 interface BookMarkItemProps {
   imgSrc?: string;
   title: string;
@@ -14,14 +10,13 @@ interface BookMarkItemProps {
   startAt: string;
   deadLineAt: string;
   _id: string;
-  // 일정과 메모가 섞여 있으므로 어느 컬렉션의 문서인지 알아야
-  // 북마크·삭제를 맞는 API 로 보낼 수 있다.
+  // 일정과 메모가 섞여 있어 북마크를 맞는 API 로 보내려면 출처가 필요하다
   type: "task" | "memo";
   onClick?: () => void;
-  onEdit?: () => void;
   isBookMarked: boolean;
 }
 
+// [북마크] 북마크 목록의 카드 하나
 export default function BookMarkItem({
   imgSrc,
   title,
@@ -31,17 +26,11 @@ export default function BookMarkItem({
   _id,
   type,
   onClick,
-  onEdit,
   isBookMarked,
 }: BookMarkItemProps) {
   const router = useRouter();
 
-  const modifyMemo = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    onEdit?.();
-  };
-
-  // 북마크를 서버에 반영한 뒤 서버 컴포넌트를 새로 그려 최신 isBookMarked 를 받아온다.
+  // 서버에 반영한 뒤 새로 그려 최신 isBookMarked 를 받아온다
   const toggleBookmark = async (id: string) => {
     await (type === "task" ? bookmarkTask(id) : bookmarkMemo(id));
     router.refresh();
@@ -97,22 +86,6 @@ export default function BookMarkItem({
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </figure>
-      {/* <div className=" flex flex-col gap-4 ml-4">
-        <button
-          type="button"
-          className="btn-3d-red font-basic xl:p-2 xl:pl-5 xl:pr-5 lg:p-2 lg:pl-4 lg:pr-4 md:p-1.5 md:pl-3 md:pr-3 sm:p-1.5 sm:pl-2 sm:pr-2 p-1 pl-1.5 pr-1.5 rounded-md xl:text-size-sm lg:text-sm md:text-xs sm:text-xs text-[10px] whitespace-nowrap"
-          onClick={(event) => deleteBtn(event, _id)}
-        >
-          삭제
-        </button>
-        <button
-          type="button"
-          className="btn-3d font-basic xl:p-2 xl:pl-5 xl:pr-5 lg:p-2 lg:pl-4 lg:pr-4 md:p-1.5 md:pl-3 md:pr-3 sm:p-1.5 sm:pl-2 sm:pr-2 p-1 pl-1.5 pr-1.5 rounded-md xl:text-size-sm lg:text-sm md:text-xs sm:text-xs text-[10px] whitespace-nowrap"
-          onClick={modifyMemo}
-        >
-          수정
-        </button>
-      </div> */}
     </li>
   );
 }

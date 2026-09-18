@@ -4,16 +4,16 @@ import { MouseEvent } from "react";
 
 interface BookMarkBtnProps {
   id: string;
-  isBookmarked: boolean; // 서버 값을 그대로 그린다
+  isBookmarked: boolean;
   onClick: (id: string) => void;
 }
+
+// [북마크] 북마크 토글 버튼. 상태는 서버 값(prop)을 그대로 그린다.
 export default function BookMarkBtn({
   id,
   isBookmarked,
   onClick,
 }: BookMarkBtnProps) {
-  // 서버 값을 로컬 state 로 복사해두면 값이 두 벌이 되어 계속 맞춰줘야 한다.
-  // 부모가 북마크 저장 후 router.refresh() 로 새 값을 내려주므로 prop 만 보면 된다.
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 카드 클릭까지 번지지 않게
     onClick(id);

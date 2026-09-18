@@ -12,6 +12,7 @@ interface BookMarkDetailProps {
   onClose: () => void;
 }
 
+// [북마크] 북마크한 메모의 상세 팝업
 export default function BookMarkDetail({
   memo,
   onClose,

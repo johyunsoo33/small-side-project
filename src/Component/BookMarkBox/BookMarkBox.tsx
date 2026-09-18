@@ -7,6 +7,7 @@ interface BookMarkBoxProps {
   memoList: MemoProps[];
 }
 
+// [북마크] 북마크 페이지의 최상위 박스
 export default function BookMarkBox({ taskList, memoList }: BookMarkBoxProps) {
   return (
     <>
