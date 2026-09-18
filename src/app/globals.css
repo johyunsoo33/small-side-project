@@ -17,9 +17,8 @@
   --color-flame-400: #c6531f;
   --color-flame-500: #a04014;
 
-  /* 3d 버튼 색상 변형. 400 은 버튼 면, 500 은 테두리와 눌리는 단면에 쓴다.
-     Tailwind 기본 팔레트(blue, pink, purple, lime ...)와 이름이 겹치면
-     bg-blue-400 같은 기존 유틸리티까지 덮어써 버리므로 고유한 이름을 쓴다. */
+  /* 3d 버튼 색상. 400 은 버튼 면, 500 은 눌리는 단면.
+     Tailwind 기본 팔레트 이름과 겹치면 기존 유틸리티를 덮어써서 고유 이름을 쓴다. */
   --color-azure-400: #7cc4f0;
   --color-azure-500: #4a92c2;
 
@@ -64,11 +63,7 @@ body {
   height: 5rem;
 }
 
-/* 메뉴가 왼쪽에 세로로 열리므로 항목도 왼쪽에서 밀려 들어온다.
-   scaleX 로 하면 버튼과 3d 그림자가 눌렸다 펴지면서 일그러지므로
-   모양이 변하지 않는 translateX 를 쓴다.
-   등장 순서(지연)는 항목마다 달라야 해서 여기 두지 않고
-   MenuList 가 animationDelay 로 하나씩 넣어준다. */
+/* 메뉴 항목이 왼쪽에서 밀려 들어온다. 등장 지연은 MenuList 가 항목마다 넣어준다. */
 @keyframes slide-in-left {
   0% {
     opacity: 0;
@@ -84,11 +79,7 @@ body {
   animation: slide-in-left 0.2s ease-out both;
 }
 
-/* 열린 메뉴가 페이지 내용과 구분되도록 옅은 붉은 경계선을 준다.
-   첫 줄의 0 0 0 1px 은 퍼짐만 있는 그림자라 1px 테두리처럼 보이면서
-   border 와 달리 레이아웃(크기)에 영향을 주지 않는다.
-   색은 btn-3d-red 와 맞추려고 flame 계열을 썼다.
-   배경색이 필요한 이유: 패널이 본문 위에 떠 있어서 비워두면 글이 비쳐 보인다. */
+/* 열린 메뉴 패널. 본문 위에 떠 있어서 배경색이 필요하다. */
 .menu-panel {
   border-radius: 0.75rem;
   background: var(--card);
@@ -137,8 +128,7 @@ body {
     transform: translateY(6px);
   }
 
-  /* 아래는 .btn-3d-red 와 같은 구조로 색만 바꾼 밝은 변형들이다.
-     바탕이 밝으므로 글자색은 전부 진한 --color-button-color 를 쓴다. */
+  /* 아래는 .btn-3d-red 와 같은 구조로 색만 바꾼 변형들 */
 
   .btn-3d-blue {
     background-color: var(--color-azure-400);
