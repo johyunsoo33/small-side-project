@@ -1,6 +1,7 @@
 const { MongoClient, ObjectId } = require("mongodb");
 let mongoDB = null;
 
+// [연결] 서버가 뜰 때 한 번 연결하고 이후 모든 함수가 이 mongoDB 를 공유한다.
 (async () => {
   const urlMongoDB = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/?maxPoolSize=${process.env.MONGODB_LIMIT}`;
   const client = new MongoClient(urlMongoDB);
@@ -13,12 +14,13 @@ let mongoDB = null;
   }
 })();
 
+// [조회] 컬렉션 전체 또는 조건에 맞는 문서 목록
 const find = async (collectionName, condition = {}) => {
   const r = await mongoDB.collection(collectionName).find(condition).toArray();
   return r;
 };
 
-// _id 로 문서 하나를 조회한다. 저장 시 _id 가 ObjectId 라 문자열 조건으론 안 맞으므로 여기서 변환한다.
+// [조회] _id 로 문서 하나
 const findByID = async (collectionName, _id) => {
   const r = await mongoDB
     .collection(collectionName)
@@ -26,35 +28,19 @@ const findByID = async (collectionName, _id) => {
   return r;
 };
 
-// // 여러 컬렉션을 한 번에 조회한다.
-// // _id 만으로는 어느 컬렉션에서 나온 문서인지 알 수 없으므로 출처를 함께 붙여서 반환한다.
-// const findMany = async (collectionNames, condition = {}) => {
-//   const results = await Promise.all(
-//     collectionNames.map(async (name) => {
-//       const docs = await find(name, condition);
-//       return docs.map((doc) => ({ ...doc, collection: name }));
-//     }),
-//   );
-//   return results.flat();
-// };
-
-// // 한 컬렉션에서 _id 목록으로 한 번에 조회한다.
-// const findByIds = async (collectionName, ids) => {
-//   const objectIds = ids.filter((id) => ObjectId.isValid(id)).map((id) => new ObjectId(id));
-//   if (objectIds.length === 0) return [];
-//   return find(collectionName, { _id: { $in: objectIds } });
-// };
-
+// [생성] 문서 하나 추가
 const insert = async (collectionName, data) => {
   const r = await mongoDB.collection(collectionName).insertOne(data);
   return r;
 };
 
+// [생성] 문서 여러 개 한 번에 추가
 const insertMany = async (collectionName, data) => {
   const r = await mongoDB.collection(collectionName).insertMany(data);
   return r;
 };
 
+// [수정] _id 로 찾아 넘어온 필드만 덮어쓴다
 const update = async (collectionName, data, _id) => {
   const r = await mongoDB
     .collection(collectionName)
@@ -65,6 +51,7 @@ const update = async (collectionName, data, _id) => {
   return r;
 };
 
+// [삭제] _id 로 문서 하나 삭제
 const deleteByID = async (collectionName, _id) => {
   const r = await mongoDB
     .collection(collectionName)
