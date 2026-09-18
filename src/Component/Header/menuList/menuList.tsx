@@ -3,8 +3,7 @@
 import { useState } from "react";
 import MenuItem, { MenuContentProps } from "../menuItem/menuItem";
 
-// 항목이 늘어날 때 JSX 를 복사하지 않도록 목록으로 빼둔다.
-// 순서가 그대로 등장 순서(animationDelay)가 된다.
+// 메뉴 항목. 배열 순서가 곧 등장 순서다.
 const MENU_ITEMS: MenuContentProps[] = [
   {
     content: "일정",
@@ -28,12 +27,12 @@ const MENU_ITEMS: MenuContentProps[] = [
   },
 ];
 
+// [메뉴] 햄버거 아이콘과 좌측 세로 메뉴 패널
 export default function MenuList() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    // 열린 메뉴를 absolute 로 띄운다. 세로 배열이라 흐름에 두면
-    // 열 때마다 아래 내용이 패널 높이만큼 통째로 밀려 내려간다.
+    // 메뉴를 absolute 로 띄운다. 흐름에 두면 열 때마다 본문이 밀려 내려간다.
     <div className="relative p-3">
       <button
         type="button"
@@ -43,9 +42,7 @@ export default function MenuList() {
         onClick={() => setIsOpen(!isOpen)}
       >
         {/* 열리면 두 줄이 겹쳐지며 X 가 된다.
-            ref 로 className 을 직접 갈아끼우면 React 가 알고 있는 DOM 과 어긋나므로
-            isOpen 에서 클래스를 계산한다. 색도 bg-white 대신 bg-foreground 를 써야
-            라이트 모드(#f7f6f3)에서 흰 줄이 배경에 묻히지 않는다. */}
+            bg-white 가 아닌 bg-foreground 를 쓰는 이유는 라이트 모드에서 묻히지 않게 하려고. */}
         <span
           className={`absolute top-1/2 left-0 w-full h-0.5 bg-foreground origin-center transition-all ${
             isOpen ? "rotate-45" : "-translate-y-1"
@@ -59,8 +56,7 @@ export default function MenuList() {
       </button>
 
       {isOpen ? (
-        // gap-3 인 이유: 3d 버튼이 아래로 6px 짜리 단면 그림자를 갖고 있어서
-        // 간격이 이보다 좁으면 다음 버튼과 붙어 보인다.
+        // gap-3 인 이유: 3d 버튼의 아래쪽 6px 그림자와 겹치지 않게
         <ul className="menu-panel absolute left-3 top-full z-50 mt-2 flex w-36 flex-col gap-3 p-3">
           {MENU_ITEMS.map((item, index) => (
             <MenuItem

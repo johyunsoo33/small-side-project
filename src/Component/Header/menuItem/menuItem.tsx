@@ -6,10 +6,10 @@ export interface MenuContentProps {
   targetLink: string;
   imagePath?: string;
   styleName?: string;
-  // 항목마다 조금씩 늦게 나타나게 하려고 부모가 순서대로 넣어준다.
   animationDelay?: string;
 }
 
+// [메뉴] 메뉴 버튼 하나. 글자 또는 아이콘 중 하나를 그린다.
 export default function MenuItem({
   content,
   targetLink,
@@ -18,9 +18,8 @@ export default function MenuItem({
   animationDelay,
 }: MenuContentProps) {
   return (
-    // 버튼 모양(패딩, 색, 3d 그림자)은 li 가 아니라 Link 에 준다.
-    // li 에 주면 그 안의 a 는 inline 이라 글자 크기만큼만 차지해서
-    // 패딩과 늘어난 너비가 전부 클릭되지 않는 영역이 되어버린다.
+    // 버튼 스타일은 li 가 아니라 Link 에 준다. li 에 주면 a 가 inline 이라
+    // 글자 크기만큼만 클릭되고 패딩은 눌러도 반응하지 않는다.
     <li
       className="slide-in-left w-full"
       style={animationDelay ? { animationDelay } : undefined}
