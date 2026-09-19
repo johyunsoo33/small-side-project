@@ -1,6 +1,7 @@
 import { bookmarkMemo, deleteMemo } from "@/src/functions/CalenderTaskAdd";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Pencil, Trash2 } from "lucide-react";
 import BookMarkBtn from "../../BookMark/BookMarkBtn";
 interface MemoItemProps {
   imgSrc?: string;
@@ -51,29 +52,27 @@ export default function MemoItem({
   return (
     <li
       onClick={onClick}
-      className="list-none bg-gray-300/20 rounded-lg w-full min-h-16 flex justify-between items-center p-3 cursor-pointer"
+      className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl border border-cream-200 bg-white p-5 transition-shadow hover:shadow-[0_12px_30px_-16px_rgba(120,80,40,0.3)]"
     >
       <figure
         className={`grid w-full grid-rows-[auto_auto_1fr] gap-y-1 ${
-          imgSrc ? "grid-cols-[64px_1fr] gap-x-3" : "grid-cols-1"
+          imgSrc ? "grid-cols-[64px_1fr] gap-x-4" : "grid-cols-1"
         }`}
       >
-        {imgSrc ? (
+        {imgSrc && (
           <Image
             alt=""
             src={imgSrc}
-            width={50}
-            height={50}
+            width={64}
+            height={64}
             unoptimized
-            className="col-start-1 row-start-1 row-span-3 w-full h-full self-stretch rounded-md object-cover"
+            className="col-start-1 row-start-1 row-span-3 h-full w-full self-stretch rounded-lg object-cover"
           />
-        ) : (
-          <></>
         )}
         <figcaption
-          className={`row-start-1 font-semibold ${
+          className={`row-start-1 flex items-center gap-2 font-semibold text-ink-900 ${
             imgSrc ? "col-start-2" : "col-start-1"
-          } flex items-center gap-1`}
+          }`}
         >
           {title}
           <BookMarkBtn
@@ -83,7 +82,7 @@ export default function MemoItem({
           />
         </figcaption>
         <div
-          className={`row-start-2 flex gap-2 text-xs text-white/55 ${
+          className={`row-start-2 flex gap-2 text-xs text-ink-600 ${
             imgSrc ? "col-start-2" : "col-start-1"
           }`}
         >
@@ -92,26 +91,29 @@ export default function MemoItem({
           <time>{deadLineAt.split("T")[0]}</time>
         </div>
         <div
-          className={`row-start-3 text-sm text-white/70 truncate ${
+          className={`row-start-3 truncate text-sm text-ink-600 ${
             imgSrc ? "col-start-2" : "col-start-1"
           }`}
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </figure>
-      <div className=" flex flex-col gap-4 ml-4">
+
+      <div className="flex shrink-0 gap-1">
         <button
           type="button"
-          className="btn-3d-red font-basic xl:p-2 xl:pl-5 xl:pr-5 lg:p-2 lg:pl-4 lg:pr-4 md:p-1.5 md:pl-3 md:pr-3 sm:p-1.5 sm:pl-2 sm:pr-2 p-1 pl-1.5 pr-1.5 rounded-md xl:text-size-sm lg:text-sm md:text-xs sm:text-xs text-[10px] whitespace-nowrap"
-          onClick={(event) => deleteMemoBtn(event, _id)}
+          title="수정"
+          onClick={modifyMemo}
+          className="rounded-lg p-2 text-ink-600 transition-colors hover:bg-cream-100 hover:text-ink-900"
         >
-          삭제
+          <Pencil size={18} />
         </button>
         <button
           type="button"
-          className="btn-3d font-basic xl:p-2 xl:pl-5 xl:pr-5 lg:p-2 lg:pl-4 lg:pr-4 md:p-1.5 md:pl-3 md:pr-3 sm:p-1.5 sm:pl-2 sm:pr-2 p-1 pl-1.5 pr-1.5 rounded-md xl:text-size-sm lg:text-sm md:text-xs sm:text-xs text-[10px] whitespace-nowrap"
-          onClick={modifyMemo}
+          title="삭제"
+          onClick={(event) => deleteMemoBtn(event, _id)}
+          className="rounded-lg p-2 text-ink-600 transition-colors hover:bg-clay-100 hover:text-clay-600"
         >
-          수정
+          <Trash2 size={18} />
         </button>
       </div>
     </li>

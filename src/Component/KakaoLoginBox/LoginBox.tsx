@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { CheckCircle2, MessageCircle } from "lucide-react";
 import KakaoButton from "../KakaoBtn/KakaoButton";
 import { kakaoLoginComplete } from "@/src/functions/kakao_login";
 
@@ -28,10 +30,46 @@ export default function LoginBox() {
       .catch(() => setStatus("error"));
   }, [code, router]);
 
-  if (status === "loading") return <p>로그인 처리 중...</p>;
-  if (status === "success") return <p>카카오 연동 완료</p>;
-  if (status === "error")
-    return <p>로그인에 실패했습니다. 다시 시도해주세요.</p>;
+  if (status === "loading") {
+    return (
+      <div className="rounded-2xl border border-cream-200 bg-white p-10 text-ink-600">
+        연동 처리 중...
+      </div>
+    );
+  }
 
-  return <KakaoButton />;
+  if (status === "success") {
+    return (
+      <div className="rounded-2xl border border-sage-500/30 bg-sage-100/60 p-10">
+        <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-sage-500">
+          <CheckCircle2 size={32} />
+        </span>
+        <p className="mt-5 font-serif text-2xl font-bold text-ink-900">
+          카카오 연동 완료
+        </p>
+        <Link
+          href="/mySchedule"
+          className="mt-6 inline-block rounded-lg bg-clay-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-clay-600"
+        >
+          일정으로 가기
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl border border-cream-200 bg-white p-10">
+      <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-honey-100 text-honey-500">
+        <MessageCircle size={32} />
+      </span>
+      {status === "error" && (
+        <p className="mt-5 text-sm text-clay-600">
+          연동에 실패했어요. 다시 시도해주세요.
+        </p>
+      )}
+      <div className="mt-6">
+        <KakaoButton />
+      </div>
+    </div>
+  );
 }

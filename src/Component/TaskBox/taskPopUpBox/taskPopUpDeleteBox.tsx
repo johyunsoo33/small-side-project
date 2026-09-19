@@ -61,7 +61,7 @@ export default function TaskPopUpDeleteBox({
   }, []);
   return popUpStatus ? (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0B0F1A]/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/50 backdrop-blur-sm"
       onClick={closePopUpFunction}
     >
       <div
@@ -73,24 +73,24 @@ export default function TaskPopUpDeleteBox({
             type="button"
             aria-label="닫기"
             onClick={closePopUpFunction}
-            className="absolute right-3 top-3 rounded-full p-1.5 text-[#0B0F1A]/30 transition-all duration-150 hover:bg-[#0B0F1A]/5 hover:text-[#4F5DFF] active:scale-90"
+            className="absolute right-3 top-3 rounded-full p-1.5 text-ink-900/30 transition-all duration-150 hover:bg-ink-900/5 hover:text-clay-500 active:scale-90"
           >
             <X size={18} />
           </button>
 
           <header className="mb-4 flex items-center gap-2">
-            <ListChecks size={16} className="text-[#4F5DFF]" />
-            <p className="text-base font-bold tracking-tight text-[#0B0F1A]">
+            <ListChecks size={16} className="text-clay-500" />
+            <p className="text-base font-bold tracking-tight text-ink-900">
               할 일 삭제
             </p>
-            <span className="ml-1 rounded-full bg-[#4F5DFF]/10 px-2.5 py-0.5 text-xs font-medium text-[#4F5DFF]">
+            <span className="ml-1 rounded-full bg-clay-500/10 px-2.5 py-0.5 text-xs font-medium text-clay-500">
               {dateLabel}
             </span>
           </header>
 
           {/* 이 날짜의 할 일 목록 */}
           {tasks.length === 0 ? (
-            <p className="rounded-lg border border-dashed border-[#0B0F1A]/10 px-3 py-6 text-center text-xs text-[#0B0F1A]/35">
+            <p className="rounded-lg border border-dashed border-ink-900/10 px-3 py-6 text-center text-xs text-ink-900/35">
               삭제할 할 일이 없어요
             </p>
           ) : (
@@ -103,19 +103,19 @@ export default function TaskPopUpDeleteBox({
                 return (
                   <li
                     key={task._id}
-                    className="group flex items-start justify-between gap-2 rounded-lg border border-[#0B0F1A]/8 bg-[#FAFAFC] px-3 py-2.5 transition-colors duration-150"
+                    className="group flex items-start justify-between gap-2 rounded-lg border border-ink-900/8 bg-cream-50 px-3 py-2.5 transition-colors duration-150"
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-[#0B0F1A]/85">
+                      <p className="truncate text-sm font-medium text-ink-900/85">
                         {task.title}
                       </p>
                       {task.content && (
-                        <p className="mt-0.5 truncate text-xs text-[#0B0F1A]/45">
+                        <p className="mt-0.5 truncate text-xs text-ink-900/45">
                           {task.content}
                         </p>
                       )}
                       {rangeLabel && (
-                        <span className="mt-1 inline-block rounded bg-[#4F5DFF]/8 px-1.5 py-0.5 text-[10px] font-medium text-[#4F5DFF]">
+                        <span className="mt-1 inline-block rounded bg-clay-500/8 px-1.5 py-0.5 text-[10px] font-medium text-clay-500">
                           {rangeLabel}
                         </span>
                       )}
@@ -124,7 +124,7 @@ export default function TaskPopUpDeleteBox({
                       type="button"
                       aria-label={`${task.title} 삭제`}
                       onClick={() => handleDeleteTask(task._id)}
-                      className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-[#0B0F1A]/35 transition-all duration-100 hover:bg-red-50 hover:text-red-500 active:scale-90 active:bg-red-100"
+                      className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-ink-900/35 transition-all duration-100 hover:bg-red-50 hover:text-red-500 active:scale-90 active:bg-red-100"
                     >
                       <Trash2 size={13} />
                     </button>
@@ -135,11 +135,11 @@ export default function TaskPopUpDeleteBox({
           )}
         </div>
 
-        <footer className="flex justify-end border-t border-[#0B0F1A]/6 bg-white px-6 py-4">
+        <footer className="flex justify-end border-t border-ink-900/6 bg-white px-6 py-4">
           <button
             type="button"
             onClick={closePopUpFunction}
-            className="rounded-lg px-4 py-2 text-sm text-[#0B0F1A]/50 transition-all duration-150 hover:bg-[#0B0F1A]/5 active:scale-95"
+            className="rounded-lg px-4 py-2 text-sm text-ink-900/50 transition-all duration-150 hover:bg-ink-900/5 active:scale-95"
           >
             닫기
           </button>

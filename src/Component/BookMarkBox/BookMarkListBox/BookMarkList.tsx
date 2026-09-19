@@ -20,8 +20,16 @@ export default function BookMarkList({
     ...memoList.map((memo) => ({ ...memo, type: "memo" as const })),
   ].filter((doc) => doc.isBookMarked);
 
+  if (docs.length === 0) {
+    return (
+      <p className="mt-10 rounded-2xl border border-dashed border-cream-200 py-16 text-center text-ink-600">
+        북마크한 항목이 없어요. 일정이나 메모에서 북마크를 눌러보세요.
+      </p>
+    );
+  }
+
   return (
-    <ol className="max-w-10/12 mt-10 m-auto flex flex-col gap-4 w-full">
+    <ol className="mt-10 flex w-full flex-col gap-4">
       {docs.map((item) => (
         <BookMarkItem
           key={item._id}

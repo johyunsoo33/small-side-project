@@ -2,9 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TaskProps } from "@/src/types/addTaskType";
 import { markTaskViewed } from "@/src/functions/CalenderTaskAdd";
 import TaskDetail from "../TaskDetailBox/TaskDetailBox";
+import MonthGrid from "./MonthGrid";
+import WeekGrid from "./WeekGrid";
+import { toDateKey } from "./calendarUtils";
 
 export interface CalendarDate {
   day: number;
@@ -13,30 +17,40 @@ export interface CalendarDate {
   isPrevMonth: boolean;
 }
 
+export type CalendarView = "week" | "month";
+
 interface TaskCalenderBoxProps {
+  view: CalendarView;
+  onChangeView: (view: CalendarView) => void;
+  label: string;
   calendar: CalendarDate[];
+  week: Date[];
+  taskList: TaskProps[];
+  onPrev: () => void;
+  onNext: () => void;
+  onToday: () => void;
 }
 
-// Date 를 "YYYY-MM-DD" 로 변환
-function toDateKey(date: Date) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-}
+const VIEWS: { key: CalendarView; label: string }[] = [
+  { key: "week", label: "주" },
+  { key: "month", label: "월" },
+];
 
-// 해당 날짜 칸에 걸치는 일정만 걸러낸다 (YYYY-MM-DD 는 사전순 = 날짜순이라 문자열 비교로 충분)
-function getTasksForDate(taskList: TaskProps[], date: Date) {
-  const dateKey = toDateKey(date);
-  return taskList.filter(
-    (task) => task.startDate <= dateKey && dateKey <= task.endDate,
-  );
-}
-
-// [일정] 달력 본체. 날짜 칸에 일정을 뿌리고 클릭하면 상세를 띄운다.
+// [일정] 달력 카드. 상단바에서 주/월을 고르고, 아래에 해당 뷰를 그린다.
 export default function TaskCalenderBox({
+  view,
+  onChangeView,
+  label,
   calendar,
+  week,
   taskList,
-}: TaskCalenderBoxProps & { taskList: TaskProps[] }) {
+  onPrev,
+  onNext,
+  onToday,
+}: TaskCalenderBoxProps) {
   const [selectedTask, setSelectedTask] = useState<TaskProps | null>(null);
   const router = useRouter();
+  const todayKey = toDateKey(new Date());
 
   // 상세를 띄우고 조회 시각을 서버에 기록한다 (최근 본 문서 목록에 반영)
   const openTaskDetail = async (task: TaskProps) => {
@@ -45,44 +59,63 @@ export default function TaskCalenderBox({
     if (res.ok) router.refresh();
   };
 
+  const navButton =
+    "flex h-9 w-9 items-center justify-center rounded-full border border-cream-200 bg-white text-ink-600 transition-colors hover:bg-cream-100 hover:text-ink-900";
+
   return (
-    <div className="taskCalenderBox max-w-[100rem] mt-10 m-auto">
-      <div className="taskCalender grid grid-cols-7 gap-4">
-        {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
-          <div key={day} className="font-bold text-white text-center">
-            {day}
-          </div>
-        ))}
-
-        {calendar.map((date, index) => {
-          const tasksForDate = getTasksForDate(taskList, date.date);
-
-          return (
-            <div
-              key={index}
-              className={`min-w-28  min-h-28 pb-4 pl-1 pt-1 ${
-                date.isCurrentMonth ? "text-white" : "text-gray-400"
-              } border-1 border-white rounded-xl`}
+    <div className="mt-10 overflow-hidden rounded-2xl border border-cream-200 bg-white shadow-[0_20px_60px_-30px_rgba(120,80,40,0.25)]">
+      <div className="flex items-center justify-between border-b border-cream-200 bg-cream-50 px-6 py-4">
+        <div className="flex gap-2">
+          {VIEWS.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              onClick={() => onChangeView(item.key)}
+              className={
+                view === item.key
+                  ? "flex h-11 w-11 items-center justify-center rounded-full bg-sage-500 text-white"
+                  : "flex h-11 w-11 items-center justify-center rounded-full border border-cream-200 bg-white text-ink-600 transition-colors hover:bg-cream-100"
+              }
             >
-              <div>{date.day}</div>
-              <div className="flex flex-col gap-1 mt-1">
-                {tasksForDate.map((task) => (
-                  <div
-                    key={task._id}
-                    onClick={() => openTaskDetail(task)}
-                    // 최근 본 일정은 테두리로 구분한다
-                    className={`truncate rounded bg-[#4F5DFF] px-1 text-xs text-white min-w-8/10 max-w-9/10 mx-auto cursor-pointer ${
-                      task.isRecent ? "ring-1 ring-white/70" : ""
-                    }`}
-                    title={task.title}
-                  >
-                    {task.title}
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-ink-600">{label}</span>
+          <button
+            type="button"
+            onClick={onToday}
+            className="rounded-full border border-cream-200 bg-white px-3 py-1.5 text-sm text-ink-600 transition-colors hover:bg-cream-100 hover:text-ink-900"
+          >
+            오늘
+          </button>
+          <button type="button" onClick={onPrev} title="이전" className={navButton}>
+            <ChevronLeft size={18} />
+          </button>
+          <button type="button" onClick={onNext} title="다음" className={navButton}>
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+
+      <div className="px-6 py-6">
+        {view === "week" ? (
+          <WeekGrid
+            days={week}
+            taskList={taskList}
+            todayKey={todayKey}
+            onOpenTask={openTaskDetail}
+          />
+        ) : (
+          <MonthGrid
+            calendar={calendar}
+            taskList={taskList}
+            todayKey={todayKey}
+            onOpenTask={openTaskDetail}
+          />
+        )}
       </div>
 
       <TaskDetail task={selectedTask} onClose={() => setSelectedTask(null)} />

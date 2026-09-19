@@ -41,7 +41,7 @@ export default function MemoPopUp({
 
   return popUpStatus ? (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/40"
       onClick={closePopUpFunction}
     >
       <div
@@ -49,22 +49,22 @@ export default function MemoPopUp({
         onClick={stopPopUpClick}
       >
         {/* 워시테이프 */}
-        <div className="absolute -top-3 left-9 z-10 h-6 w-20 -rotate-3 border border-[#E8604C]/10 bg-[#FFD966]/85 shadow-sm" />
+        <div className="absolute -top-3 left-9 z-10 h-6 w-20 -rotate-3 border border-clay-500/10 bg-honey-500/70 shadow-sm" />
 
-        <div className="relative flex flex-col justify-between rounded-sm border border-[#2B2620]/10 bg-[#FDF6E9] p-6 shadow-[6px_6px_0_0_rgba(43,38,32,0.15)]">
+        <div className="relative flex flex-col justify-between rounded-sm border border-ink-900/10 bg-cream-50 p-6 shadow-[6px_6px_0_0_rgba(43,38,32,0.15)]">
           {/* 닫기 버튼 (아이콘) */}
           <button
             type="button"
             aria-label="닫기"
             onClick={closePopUpFunction}
-            className="absolute right-3 top-3 rounded-full p-1.5 text-[#2B2620]/40 transition-all duration-150 hover:rotate-90 hover:bg-[#2B2620]/5 hover:text-[#E8604C] active:scale-90"
+            className="absolute right-3 top-3 rounded-full p-1.5 text-ink-900/40 transition-all duration-150 hover:rotate-90 hover:bg-ink-900/5 hover:text-clay-500 active:scale-90"
           >
             <X size={18} />
           </button>
 
           <header className="mb-5 flex items-center gap-2">
-            <Pin size={16} className="-rotate-45 text-[#E8604C]" />
-            <p className="text-lg font-bold tracking-tight text-[#2B2620]">
+            <Pin size={16} className="-rotate-45 text-clay-500" />
+            <p className="text-lg font-bold tracking-tight text-ink-900">
               메모 추가
             </p>
           </header>
@@ -82,11 +82,11 @@ export default function MemoPopUp({
                   name="title"
                   type="text"
                   placeholder=" "
-                  className="peer w-full border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
+                  className="peer w-full border-b-2 border-ink-900/15 bg-transparent px-1 pb-1.5 pt-5 text-ink-900 outline-none transition-colors duration-200 focus:border-clay-500"
                 />
                 <label
                   htmlFor="memo-title"
-                  className="pointer-events-none absolute left-1 top-5 text-sm text-[#2B2620]/40 transition-all duration-200 ease-out peer-focus:top-0 peer-focus:text-xs peer-focus:font-medium peer-focus:text-[#E8604C] peer-[&:not(:placeholder-shown)]:top-0 peer-[&:not(:placeholder-shown)]:text-xs"
+                  className="pointer-events-none absolute left-1 top-5 text-sm text-ink-900/40 transition-all duration-200 ease-out peer-focus:top-0 peer-focus:text-xs peer-focus:font-medium peer-focus:text-clay-500 peer-[&:not(:placeholder-shown)]:top-0 peer-[&:not(:placeholder-shown)]:text-xs"
                 >
                   메모 제목
                 </label>
@@ -100,11 +100,11 @@ export default function MemoPopUp({
                   placeholder=" "
                   rows={2}
                   onChange={MemoAddContentArea}
-                  className="peer w-full resize-none overflow-hidden border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
+                  className="peer w-full resize-none overflow-hidden border-b-2 border-ink-900/15 bg-transparent px-1 pb-1.5 pt-5 text-ink-900 outline-none transition-colors duration-200 focus:border-clay-500"
                 />
                 <label
                   htmlFor="memo-desc"
-                  className="pointer-events-none absolute left-1 top-5 text-sm text-[#2B2620]/40 transition-all duration-200 ease-out peer-focus:top-0 peer-focus:text-xs peer-focus:font-medium peer-focus:text-[#E8604C] peer-[&:not(:placeholder-shown)]:top-0 peer-[&:not(:placeholder-shown)]:text-xs"
+                  className="pointer-events-none absolute left-1 top-5 text-sm text-ink-900/40 transition-all duration-200 ease-out peer-focus:top-0 peer-focus:text-xs peer-focus:font-medium peer-focus:text-clay-500 peer-[&:not(:placeholder-shown)]:top-0 peer-[&:not(:placeholder-shown)]:text-xs"
                 >
                   메모 설명
                 </label>
@@ -117,11 +117,11 @@ export default function MemoPopUp({
                     id="start-date"
                     name="startDate"
                     type="date"
-                    className="w-full border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-sm text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
+                    className="w-full border-b-2 border-ink-900/15 bg-transparent px-1 pb-1.5 pt-5 text-sm text-ink-900 outline-none transition-colors duration-200 focus:border-clay-500"
                   />
                   <label
                     htmlFor="start-date"
-                    className="pointer-events-none absolute left-1 top-0 text-xs font-medium text-[#2B2620]/50"
+                    className="pointer-events-none absolute left-1 top-0 text-xs font-medium text-ink-900/50"
                   >
                     시작일
                   </label>
@@ -131,11 +131,11 @@ export default function MemoPopUp({
                     id="end-date"
                     name="endDate"
                     type="date"
-                    className="w-full border-b-2 border-[#2B2620]/15 bg-transparent px-1 pb-1.5 pt-5 text-sm text-[#2B2620] outline-none transition-colors duration-200 focus:border-[#E8604C]"
+                    className="w-full border-b-2 border-ink-900/15 bg-transparent px-1 pb-1.5 pt-5 text-sm text-ink-900 outline-none transition-colors duration-200 focus:border-clay-500"
                   />
                   <label
                     htmlFor="end-date"
-                    className="pointer-events-none absolute left-1 top-0 text-xs font-medium text-[#2B2620]/50"
+                    className="pointer-events-none absolute left-1 top-0 text-xs font-medium text-ink-900/50"
                   >
                     마감일
                   </label>
@@ -144,7 +144,7 @@ export default function MemoPopUp({
 
               {/* 첨부 이미지 */}
               <div className="relative">
-                <label className="mb-1 block text-xs font-medium text-[#2B2620]/50">
+                <label className="mb-1 block text-xs font-medium text-ink-900/50">
                   첨부 이미지
                 </label>
                 <input
@@ -152,7 +152,7 @@ export default function MemoPopUp({
                   name="attachment"
                   type="file"
                   accept="image/*"
-                  className="w-full text-sm text-[#2B2620]/70 file:mr-3 file:rounded-sm file:border-0 file:bg-[#2B2620]/10 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-[#2B2620] hover:file:bg-[#2B2620]/20"
+                  className="w-full text-sm text-ink-900/70 file:mr-3 file:rounded-sm file:border-0 file:bg-ink-900/10 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-ink-900 hover:file:bg-ink-900/20"
                 />
               </div>
             </form>
@@ -162,7 +162,7 @@ export default function MemoPopUp({
             <button
               type="button"
               onClick={closePopUpFunction}
-              className="rounded-sm border border-[#2B2620]/15 px-4 py-2 text-sm text-[#2B2620]/60 transition-all duration-150 hover:bg-[#2B2620]/5 active:scale-95"
+              className="rounded-sm border border-ink-900/15 px-4 py-2 text-sm text-ink-900/60 transition-all duration-150 hover:bg-ink-900/5 active:scale-95"
             >
               닫기
             </button>
@@ -170,7 +170,7 @@ export default function MemoPopUp({
               type="submit"
               form="memo-form"
               disabled={isLoading}
-              className="rounded-sm bg-[#E8604C] px-5 py-2 text-sm font-medium text-[#FDF6E9] shadow-[3px_3px_0_0_#2B2620] transition-all duration-100 hover:brightness-105 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none disabled:opacity-60"
+              className="rounded-sm bg-clay-500 px-5 py-2 text-sm font-medium text-cream-50 shadow-[3px_3px_0_0_var(--color-ink-900)] transition-all duration-100 hover:brightness-105 active:translate-x-[3px] active:translate-y-[3px] active:shadow-none disabled:opacity-60"
             >
               {isLoading ? "추가하는 중..." : "추가하기"}
             </button>

@@ -15,15 +15,10 @@ export default function MemoBox({ memoList }: { memoList: MemoProps[] }) {
     setOpen(false);
   };
   return (
-    <>
-      <div className="relative">
-        <div className=""></div>
-        <MemoTopBox createFunction={createMemo} />
-        <MemoList memoList={memoList} />
-        <div className="MemoPopUp">
-          <MemoPopUp closePopUpFunction={closePopUp} popUpStatus={open} />
-        </div>
-      </div>
-    </>
+    <div className="mx-auto max-w-5xl px-6 py-12">
+      <MemoTopBox createFunction={createMemo} />
+      <MemoList memoList={memoList} />
+      <MemoPopUp closePopUpFunction={closePopUp} popUpStatus={open} />
+    </div>
   );
 }

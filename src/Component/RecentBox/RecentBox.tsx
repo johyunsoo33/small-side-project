@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { CalendarDays, StickyNote } from "lucide-react";
 import { MemoProps, RecentDoc, TaskProps } from "@/src/types/addTaskType";
+import PageHeader from "../PageHeader/PageHeader";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -21,17 +22,22 @@ export default function RecentBox({ taskList, memoList }: RecentBoxProps) {
     ...memoList.map((memo) => ({ ...memo, type: "memo" as const })),
   ]
     .filter((doc) => doc.isRecent)
-    .sort((a, b) => viewedTime(a) - viewedTime(b)); 
+    .sort((a, b) => viewedTime(a) - viewedTime(b));
+
   return (
-    <section className="max-w-10/12 m-auto mt-10 w-full">
-      <header className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">최근 본 문서</h2>
-      </header>
+    <section className="mx-auto max-w-6xl px-6 py-12">
+      <PageHeader
+        eyebrow="최근"
+        title="최근 본 문서"
+        description="24시간 안에 열어본 일정과 메모가 자동으로 모여요."
+      />
 
       {docs.length === 0 ? (
-        <p className="text-sm text-white/50">최근에 본 문서가 없습니다.</p>
+        <p className="mt-10 rounded-2xl border border-dashed border-cream-200 py-16 text-center text-ink-600">
+          최근에 본 문서가 없습니다.
+        </p>
       ) : (
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {docs.map((doc) => {
             const imgSrc =
               doc.type === "memo" && doc.attachment
@@ -41,16 +47,22 @@ export default function RecentBox({ taskList, memoList }: RecentBoxProps) {
             return (
               <li
                 key={doc._id}
-                className="flex flex-col gap-2 rounded-lg bg-gray-300/20 p-4"
+                className="flex flex-col gap-3 rounded-2xl border border-cream-200 bg-white p-5"
               >
-                <div className="flex items-center gap-1.5 text-xs text-white/55">
+                <span
+                  className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
+                    doc.type === "task"
+                      ? "bg-clay-100 text-clay-600"
+                      : "bg-honey-100 text-honey-500"
+                  }`}
+                >
                   {doc.type === "task" ? (
-                    <CalendarDays size={14} />
+                    <CalendarDays size={13} />
                   ) : (
-                    <StickyNote size={14} />
+                    <StickyNote size={13} />
                   )}
-                  <span>{doc.type === "task" ? "일정" : "메모"}</span>
-                </div>
+                  {doc.type === "task" ? "일정" : "메모"}
+                </span>
 
                 {imgSrc && (
                   <Image
@@ -59,16 +71,16 @@ export default function RecentBox({ taskList, memoList }: RecentBoxProps) {
                     width={200}
                     height={120}
                     unoptimized
-                    className="h-24 w-full rounded-md object-cover"
+                    className="h-28 w-full rounded-lg object-cover"
                   />
                 )}
 
-                <p className="truncate font-semibold">{doc.title}</p>
+                <p className="truncate font-semibold text-ink-900">{doc.title}</p>
                 <div
-                  className="line-clamp-2 text-sm text-white/70"
+                  className="line-clamp-2 text-sm text-ink-600"
                   dangerouslySetInnerHTML={{ __html: doc.content }}
                 />
-                <div className="flex gap-2 text-xs text-white/50">
+                <div className="flex gap-2 text-xs text-ink-600">
                   <time>{doc.startDate.split("T")[0]}</time>
                   <span>~</span>
                   <time>{doc.endDate.split("T")[0]}</time>

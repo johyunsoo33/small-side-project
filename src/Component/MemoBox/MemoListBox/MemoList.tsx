@@ -26,7 +26,12 @@ export default function MemoList({ memoList }: { memoList: MemoProps[] }) {
 
   return (
     <>
-      <ol className="max-w-10/12 mt-10 m-auto flex flex-col gap-4 w-full">
+      {memoList.length === 0 && (
+        <p className="mt-10 rounded-2xl border border-dashed border-cream-200 py-16 text-center text-ink-600">
+          아직 메모가 없어요. 첫 메모를 남겨보세요.
+        </p>
+      )}
+      <ol className="mt-10 flex w-full flex-col gap-4">
         {memoList.map((item) => (
           <MemoItem
             key={item._id}

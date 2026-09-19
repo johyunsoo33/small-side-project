@@ -1,21 +1,50 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TaskTopBox from "./taskTopBox/taskTopBox";
 import TaskCalenderBox, {
   type CalendarDate,
+  type CalendarView,
 } from "./taskCalenderBox/taskCalenderBox";
 import TaskPopUpBox from "./taskPopUpBox/taskPopUpBox";
 import TaskPopUpDeleteBox from "./taskPopUpBox/taskPopUpDeleteBox";
 import { TaskProps } from "@/src/types/addTaskType";
 
-// [일정] 일정 페이지의 최상위 박스. 달력 6주(42칸)를 만들고 팝업들을 묶는다.
+// [일정] 일정 페이지의 최상위 박스. 월 뷰용 6주(42칸)와 주 뷰용 7일을 만들고 팝업들을 묶는다.
 export default function TaskBox({ taskList }: { taskList: TaskProps[] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState<CalendarView>("week");
   const [open, setOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
+
+  // 주 뷰: currentDate 가 속한 주의 일요일부터 7일
+  const weekStart = new Date(
+    year,
+    month,
+    currentDate.getDate() - currentDate.getDay(),
+  );
+  const week = Array.from(
+    { length: 7 },
+    (_, i) =>
+      new Date(
+        weekStart.getFullYear(),
+        weekStart.getMonth(),
+        weekStart.getDate() + i,
+      ),
+  );
+
+  // 상단 라벨. 주 뷰는 "2026년 9월 3주", 월 뷰는 "2026년 9월"
+  const weekOfMonth = Math.ceil(
+    (weekStart.getDate() +
+      new Date(weekStart.getFullYear(), weekStart.getMonth(), 1).getDay()) /
+      7,
+  );
+  const label =
+    view === "week"
+      ? `${weekStart.getFullYear()}년 ${weekStart.getMonth() + 1}월 ${weekOfMonth}주`
+      : `${year}년 ${month + 1}월`;
 
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0); // 다음 달의 0일 = 이번 달 마지막 날
@@ -59,12 +88,25 @@ export default function TaskBox({ taskList }: { taskList: TaskProps[] }) {
     });
   }
 
-  const prevMonth = () => {
-    setCurrentDate(new Date(year, month - 1, 1));
+  // 주 뷰면 7일씩, 월 뷰면 한 달씩 이동
+  const goPrev = () => {
+    setCurrentDate(
+      view === "week"
+        ? new Date(year, month, currentDate.getDate() - 7)
+        : new Date(year, month - 1, 1),
+    );
   };
 
-  const nextMonth = () => {
-    setCurrentDate(new Date(year, month + 1, 1));
+  const goNext = () => {
+    setCurrentDate(
+      view === "week"
+        ? new Date(year, month, currentDate.getDate() + 7)
+        : new Date(year, month + 1, 1),
+    );
+  };
+
+  const goToday = () => {
+    setCurrentDate(new Date());
   };
 
   const closePopUp = () => {
@@ -76,19 +118,21 @@ export default function TaskBox({ taskList }: { taskList: TaskProps[] }) {
   const deleteTask = () => {
     setDeleteOpen(true);
   };
-  useEffect(() => {}, []);
   return (
     <>
-      <div className="p-4">
-        <TaskTopBox
-          prevMonth={prevMonth}
-          nextMonth={nextMonth}
-          year={year}
-          month={month}
-          createTask={createTask}
-          deleteTask={deleteTask}
+      <div className="mx-auto max-w-7xl px-6 py-12">
+        <TaskTopBox createTask={createTask} deleteTask={deleteTask} />
+        <TaskCalenderBox
+          view={view}
+          onChangeView={setView}
+          label={label}
+          calendar={calendar}
+          week={week}
+          taskList={taskList}
+          onPrev={goPrev}
+          onNext={goNext}
+          onToday={goToday}
         />
-        <TaskCalenderBox calendar={calendar} taskList={taskList} />
         <div className="taskAddPopUpBox">
           <TaskPopUpBox closePopUpFunction={closePopUp} popUpStatus={open} />
           <TaskPopUpDeleteBox
