@@ -17,3 +17,18 @@ export async function kakaoLoginComplete(code: string) {
     code,
   });
 }
+
+export type KakaoStatus = {
+  connected: boolean;
+  accessExpiresAt?: string;
+  refreshExpiresAt?: string;
+  error?: string;
+};
+
+// [카카오] 서버에 저장된 토큰이 유효한지 확인한다. 만료됐으면 서버가 갱신까지 시도한 결과를 준다.
+export async function fetchKakaoStatus(): Promise<KakaoStatus> {
+  const res = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/kakao/status`,
+  );
+  return res.data;
+}
